@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptoskyrocketed</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background: #1e1e2f;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 16px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: #2a2a3d;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ffd700;
+        }
+        .card.shot {
+            border-left-color: #ff6b6b;
+        }
+        .card.long {
+            border-left-color: #51cf66;
+        }
+        .symbol {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .side {
+            font-size: 14px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-left: 8px;
+        }
+        .side.shot {
+            background: #ff6b6b33;
+            color: #ff6b6b;
+        }
+        .side.long {
+            background: #51cf6633;
+            color: #51cf66;
+        }
+        .info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 6px;
+        }
+        .btn {
+            background: #ffd700;
+            color: #1e1e2f;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:active {
+            opacity: 0.7;
+        }
+        .btn.secondary {
+            background: #3b3b5a;
+            color: #fff;
+        }
+        .status {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+        .filter-row input {
+            background: #2a2a3d;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 80px;
+        }
+        .filter-row label {
+            font-size: 14px;
+            color: #aaa;
+        }
+        .api-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #2a2a3d;
+            color: #fff;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🚀 Cryptoskyrocketed</h1>
+
+    <!-- Настройки API (ручной ввод) -->
+    <div class="card" style="border-left-color: #888;">
+        <div style="font-weight:600; margin-bottom:8px;">🌐 API Адрес</div>
+        <input class="api-input" type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
+        <button class="btn secondary" onclick="setApiUrl()" style="margin-top:8px;">Обновить API</button>
+    </div>
+
+    <!-- Панель настроек -->
+    <div class="card" style="border-left-color: #888;">
+        <div style="font-weight:600; margin-bottom:8px;">⚙️ Настройки</div>
+        <div class="filter-row">
+            <div>
+                <label>Объём (M$)</label>
+                <input type="number" id="volumeFilter" value="50" step="10">
+            </div>
+            <div>
+                <label>ATR %</label>
+                <input type="number" id="atrFilter" value="50" step="5">
+            </div>
+            <div>
+                <label>Тейк x</label>
+                <input type="number" id="riskReward" value="1.5" step="0.1">
+            </div>
+        </div>
+        <button class="btn secondary" onclick="saveSettings()">💾 Сохранить настройки</button>
+    </div>
+
+    <!-- Кнопки управления -->
+    <button class="btn" onclick="runScanner()">🔍 Запустить сканер</button>
+
+    <!-- Список сигналов -->
+    <div id="signalsList">
+        <div class="status">📭 Нет сигналов. Нажми "Запустить сканер"</div>
+    </div>
+    <div class="status" id="statusMessage"></div>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // ===== УПРАВЛЕНИЕ API URL =====
+    function getApiUrl() {
+        let url = localStorage.getItem('apiUrl');
+        if (!url) {
+            url = 'https://shame-edging-vagueness.ngrok-free.dev';
+            localStorage.setItem('apiUrl', url);
+        }
+        document.getElementById('apiUrlInput').value = url;
+        return url;
+    }
+
+    function setApiUrl() {
+        const url = document.getElementById('apiUrlInput').value.trim();
+        if (url) {
+            localStorage.setItem('apiUrl', url);
+            document.getElementById('statusMessage').innerText = '✅ API адрес обновлён';
+            loadSettings();
+        }
+    }
+
+    // ===== ЗАГРУЗКА НАСТРОЕК =====
+    async function loadSettings() {
+        const apiUrl = getApiUrl();
+        try {
+            const resp = await fetch(apiUrl + '/settings');
+            if (!resp.ok) throw new Error('Ошибка загрузки');
+            const data = await resp.json();
+            if (data.volume) document.getElementById('volumeFilter').value = data.volume;
+            if (data.atr) document.getElementById('atrFilter').value = data.atr;
+            if (data.risk_reward) document.getElementById('riskReward').value = data.risk_reward;
+            document.getElementById('statusMessage').innerText = '✅ Настройки загружены';
+        } catch (e) {
+            document.getElementById('statusMessage').innerText = '❌ Ошибка загрузки настроек: ' + e.message;
+        }
+    }
+
+    // ===== СОХРАНЕНИЕ НАСТРОЕК =====
+    async function saveSettings() {
+        const apiUrl = getApiUrl();
+        const settings = {
+            volume: parseInt(document.getElementById('volumeFilter').value),
+            atr: parseInt(document.getElementById('atrFilter').value),
+            risk_reward: parseFloat(document.getElementById('riskReward').value)
+        };
+        try {
+            const resp = await fetch(apiUrl + '/settings', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(settings)
+            });
+            if (!resp.ok) throw new Error('Ошибка сохранения');
+            document.getElementById('statusMessage').innerText = '✅ Настройки сохранены!';
+        } catch (e) {
+            document.getElementById('statusMessage').innerText = '❌ Ошибка сохранения: ' + e.message;
+        }
+    }
+
+    // ===== ЗАПУСК СКАНЕРА =====
+    async function runScanner() {
+        const apiUrl = getApiUrl();
+        document.getElementById('statusMessage').innerText = '⏳ Запуск сканера...';
+        try {
+            const resp = await fetch(apiUrl + '/run_scanner', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ chat_id: 1907661832 })
+            });
+            if (!resp.ok) throw new Error('Ошибка запуска');
+            document.getElementById('statusMessage').innerText = '✅ Сканер запущен. Ждите сигналов в Telegram!';
+        } catch (e) {
+            document.getElementById('statusMessage').innerText = '❌ Ошибка запуска: ' + e.message;
+        }
+    }
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    loadSettings();
+</script>
+</body>
+</html>
