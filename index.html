@@ -31,12 +31,8 @@
             margin-bottom: 12px;
             border-left: 4px solid #ffd700;
         }
-        .card.shot {
-            border-left-color: #ff6b6b;
-        }
-        .card.long {
-            border-left-color: #51cf66;
-        }
+        .card.shot { border-left-color: #ff6b6b; }
+        .card.long { border-left-color: #51cf66; }
         .symbol {
             font-weight: 700;
             font-size: 18px;
@@ -76,9 +72,7 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .btn:active {
-            opacity: 0.7;
-        }
+        .btn:active { opacity: 0.7; }
         .btn.secondary {
             background: #3b3b5a;
             color: #fff;
@@ -124,14 +118,12 @@
 <div class="container">
     <h1>🚀 Cryptoskyrocketed</h1>
 
-    <!-- Настройки API (ручной ввод) -->
     <div class="card" style="border-left-color: #888;">
         <div style="font-weight:600; margin-bottom:8px;">🌐 API Адрес</div>
         <input class="api-input" type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
         <button class="btn secondary" onclick="setApiUrl()" style="margin-top:8px;">Обновить API</button>
     </div>
 
-    <!-- Панель настроек -->
     <div class="card" style="border-left-color: #888;">
         <div style="font-weight:600; margin-bottom:8px;">⚙️ Настройки</div>
         <div class="filter-row">
@@ -151,10 +143,8 @@
         <button class="btn secondary" onclick="saveSettings()">💾 Сохранить настройки</button>
     </div>
 
-    <!-- Кнопки управления -->
     <button class="btn" onclick="runScanner()">🔍 Запустить сканер</button>
 
-    <!-- Список сигналов -->
     <div id="signalsList">
         <div class="status">📭 Нет сигналов. Нажми "Запустить сканер"</div>
     </div>
@@ -165,7 +155,6 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // ===== УПРАВЛЕНИЕ API URL =====
     function getApiUrl() {
         let url = localStorage.getItem('apiUrl');
         if (!url) {
@@ -185,7 +174,6 @@
         }
     }
 
-    // ===== ЗАГРУЗКА НАСТРОЕК =====
     async function loadSettings() {
         const apiUrl = getApiUrl();
         try {
@@ -197,11 +185,10 @@
             if (data.risk_reward) document.getElementById('riskReward').value = data.risk_reward;
             document.getElementById('statusMessage').innerText = '✅ Настройки загружены';
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ Ошибка загрузки настроек: ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ Ошибка загрузки: ' + e.message;
         }
     }
 
-    // ===== СОХРАНЕНИЕ НАСТРОЕК =====
     async function saveSettings() {
         const apiUrl = getApiUrl();
         const settings = {
@@ -222,7 +209,6 @@
         }
     }
 
-    // ===== ЗАПУСК СКАНЕРА =====
     async function runScanner() {
         const apiUrl = getApiUrl();
         document.getElementById('statusMessage').innerText = '⏳ Запуск сканера...';
@@ -233,13 +219,13 @@
                 body: JSON.stringify({ chat_id: 1907661832 })
             });
             if (!resp.ok) throw new Error('Ошибка запуска');
+            const data = await resp.json();
             document.getElementById('statusMessage').innerText = '✅ Сканер запущен. Ждите сигналов в Telegram!';
         } catch (e) {
             document.getElementById('statusMessage').innerText = '❌ Ошибка запуска: ' + e.message;
         }
     }
 
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
     loadSettings();
 </script>
 </body>
