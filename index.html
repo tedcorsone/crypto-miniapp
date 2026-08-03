@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoSky Mini App</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 16px;
+            margin: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #f0b90b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid #30363d;
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #8b949e;
+            margin-bottom: 4px;
+        }
+        .card-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .signal-item {
+            background: #1c2128;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-left: 4px solid #f0b90b;
+        }
+        .signal-item.long {
+            border-left-color: #00c853;
+        }
+        .signal-item.short {
+            border-left-color: #ff1744;
+        }
+        .signal-symbol {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .signal-price {
+            font-size: 14px;
+            color: #8b949e;
+        }
+        .signal-detail {
+            font-size: 13px;
+            color: #8b949e;
+            margin-top: 4px;
+        }
+        .btn {
+            background: #f0b90b;
+            color: #0d1117;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 8px;
+        }
+        .btn:active {
+            opacity: 0.7;
+        }
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #21262d;
+        }
+        .filter-label {
+            font-size: 14px;
+            color: #8b949e;
+        }
+        .filter-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .status {
+            font-size: 14px;
+            color: #8b949e;
+            text-align: center;
+            padding: 12px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span>📈 CryptoSky</span>
+            <span style="font-size: 12px; color: #8b949e; font-weight: 400;">Mini App</span>
+        </div>
+
+        <!-- Фильтры -->
+        <div class="card">
+            <div class="card-title">⚙️ Настройки</div>
+            <div class="filter-row">
+                <span class="filter-label">Суточный объём</span>
+                <span class="filter-value" id="volumeFilter">≥ $50M</span>
+            </div>
+            <div class="filter-row">
+                <span class="filter-label">ATR фильтр</span>
+                <span class="filter-value" id="atrFilter">0.5 ATR</span>
+            </div>
+            <div class="filter-row">
+                <span class="filter-label">Время торговли</span>
+                <span class="filter-value" id="timeFilter">14:00 – 23:00 МСК</span>
+            </div>
+            <div class="filter-row">
+                <span class="filter-label">Тейк профит</span>
+                <span class="filter-value" id="tpFilter">1.5x риска</span>
+            </div>
+        </div>
+
+        <!-- Кнопка запуска -->
+        <button class="btn" id="runBtn">🚀 Запустить сканер</button>
+
+        <!-- Статус -->
+        <div class="status" id="statusText">Готов к работе</div>
+
+        <!-- Сигналы -->
+        <div id="signalsContainer"></div>
+    </div>
+
+    <script>
+        // Данные для примера — в реальности их будет присылать бот
+        const signals = [
+            // { symbol: "DOGEUSDT", side: "SHORT", price: 0.07027, entry: 0.070299, stop: 0.071144, tp: 0.069454, time: "2026-08-03 20:59" },
+            // { symbol: "XRPUSDT", side: "LONG", price: 1.0808, entry: 1.08196, stop: 1.069002, tp: 1.094918, time: "2026-08-03 20:59" }
+        ];
+
+        function renderSignals() {
+            const container = document.getElementById('signalsContainer');
+            if (signals.length === 0) {
+                container.innerHTML = '<div class="status">📭 Нет активных сигналов</div>';
+                return;
+            }
+            let html = '';
+            signals.forEach(s => {
+                const sideClass = s.side.includes('LONG') ? 'long' : 'short';
+                html += `
+                    <div class="signal-item ${sideClass}">
+                        <div class="signal-symbol">${s.symbol}</div>
+                        <div class="signal-price">Цена: ${s.price}</div>
+                        <div class="signal-detail">Вход: ${s.entry} | Стоп: ${s.stop} | Тейк: ${s.tp}</div>
+                        <div class="signal-detail">${s.time}</div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        document.getElementById('runBtn').addEventListener('click', function() {
+            const status = document.getElementById('statusText');
+            status.textContent = '⏳ Запускаю сканер...';
+            // Здесь будет отправка команды боту
+            // Для теста — просто имитация
+            setTimeout(() => {
+                status.textContent = '✅ Сканер завершён. Сигналов: 0';
+            }, 2000);
+        });
+
+        renderSignals();
+
+        // Получение данных от Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.expand(); // разворачивает на весь экран
+            // Можно получить данные от бота через tg.initData
+        }
+    </script>
+</body>
+</html>
