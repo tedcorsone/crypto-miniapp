@@ -2,159 +2,361 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cryptoskyrocketed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CryptoSky · Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            background: #1e1e2f;
-            color: #fff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        * {
             margin: 0;
-            padding: 16px;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
+
+        body {
+            background: #0b0e14;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #fff;
+            padding: 16px 16px 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #ffd700;
-            text-align: center;
+
+        /* --- GLASS CARD --- */
+        .glass {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 20px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6);
+            transition: all 0.25s ease;
+        }
+
+        .glass:active {
+            transform: scale(0.99);
+        }
+
+        /* --- HEADER --- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
-        .card {
-            background: #2a2a3d;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border-left: 4px solid #ffd700;
-        }
-        .card.shot { border-left-color: #ff6b6b; }
-        .card.long { border-left-color: #51cf66; }
-        .symbol {
+
+        .header h1 {
+            font-size: 22px;
             font-weight: 700;
-            font-size: 18px;
+            background: linear-gradient(135deg, #f5b041, #f1c40f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.3px;
         }
-        .side {
-            font-size: 14px;
-            padding: 2px 10px;
-            border-radius: 12px;
-            display: inline-block;
-            margin-left: 8px;
+
+        .header .badge {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #f1c40f;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
         }
-        .side.shot {
-            background: #ff6b6b33;
-            color: #ff6b6b;
+
+        /* --- LABELS --- */
+        .label {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: block;
         }
-        .side.long {
-            background: #51cf6633;
-            color: #51cf66;
-        }
-        .info {
+
+        /* --- INPUTS --- */
+        .input-group {
             display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            color: #aaa;
+            flex-wrap: wrap;
+            gap: 12px;
             margin-top: 6px;
         }
-        .btn {
-            background: #ffd700;
-            color: #1e1e2f;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 16px;
+
+        .input-group .field {
+            flex: 1;
+            min-width: 70px;
+        }
+
+        .input-group .field label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.35);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .input-group .field input {
             width: 100%;
-            margin-top: 10px;
-            cursor: pointer;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #fff;
+            outline: none;
             transition: 0.2s;
         }
-        .btn:active { opacity: 0.7; }
-        .btn.secondary {
-            background: #3b3b5a;
-            color: #fff;
+
+        .input-group .field input:focus {
+            border-color: #f1c40f;
+            background: rgba(255, 215, 0, 0.06);
+            box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.1);
         }
+
+        /* --- BUTTONS --- */
+        .btn {
+            width: 100%;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 18px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f5b041, #f1c40f);
+            color: #0b0e14;
+            border: none;
+            box-shadow: 0 8px 24px rgba(241, 196, 15, 0.2);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+            box-shadow: 0 4px 12px rgba(241, 196, 15, 0.15);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-secondary:active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* --- SIGNAL CARDS --- */
+        .signal-card {
+            border-left: 4px solid #f1c40f;
+            padding-left: 16px;
+            margin-bottom: 14px;
+        }
+
+        .signal-card.shot {
+            border-left-color: #ff6b6b;
+        }
+
+        .signal-card.long {
+            border-left-color: #51cf66;
+        }
+
+        .signal-card .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .signal-card .row .symbol {
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+        .signal-card .row .side {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 40px;
+        }
+
+        .signal-card .row .side.shot {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+        }
+
+        .signal-card .row .side.long {
+            background: rgba(81, 207, 102, 0.15);
+            color: #51cf66;
+        }
+
+        .signal-card .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+        }
+
+        .signal-card .meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .signal-card .meta .highlight {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* --- STATUS --- */
         .status {
             text-align: center;
-            color: #888;
             font-size: 14px;
-            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.3);
+            padding: 20px 0;
         }
-        .filter-row {
+
+        /* --- API URL --- */
+        .api-row {
             display: flex;
             gap: 10px;
-            flex-wrap: wrap;
-            margin: 12px 0;
+            align-items: center;
+            margin-top: 6px;
         }
-        .filter-row input {
-            background: #2a2a3d;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 8px;
+
+        .api-row input {
             flex: 1;
-            min-width: 80px;
-        }
-        .filter-row label {
-            font-size: 14px;
-            color: #aaa;
-        }
-        .api-input {
-            width: 100%;
-            padding: 8px;
-            border-radius: 8px;
-            border: 1px solid #444;
-            background: #2a2a3d;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 10px 14px;
+            font-size: 13px;
             color: #fff;
-            margin-top: 8px;
-            font-size: 12px;
+            outline: none;
+        }
+
+        .api-row input:focus {
+            border-color: #f1c40f;
+        }
+
+        .api-row .btn-small {
+            padding: 10px 18px;
+            border-radius: 14px;
+            border: none;
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .api-row .btn-small:active {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* --- ANIMATIONS --- */
+        .fade-in {
+            animation: fadeUp 0.5s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- UTILS --- */
+        .mt-1 { margin-top: 8px; }
+        .mt-2 { margin-top: 16px; }
+        .gap-1 { gap: 12px; }
+        .flex { display: flex; align-items: center; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .op-5 { opacity: 0.5; }
+
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar {
+            width: 0;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>🚀 Cryptoskyrocketed</h1>
 
-    <div class="card" style="border-left-color: #888;">
-        <div style="font-weight:600; margin-bottom:8px;">🌐 API Адрес</div>
-        <input class="api-input" type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
-        <button class="btn secondary" onclick="setApiUrl()" style="margin-top:8px;">Обновить API</button>
-    </div>
-
-    <div class="card" style="border-left-color: #888;">
-        <div style="font-weight:600; margin-bottom:8px;">⚙️ Настройки</div>
-        <div class="filter-row">
-            <div>
-                <label>Объём (M$)</label>
-                <input type="number" id="volumeFilter" value="50" step="10">
-            </div>
-            <div>
-                <label>ATR %</label>
-                <input type="number" id="atrFilter" value="50" step="5">
-            </div>
-            <div>
-                <label>Тейк x</label>
-                <input type="number" id="riskReward" value="1.5" step="0.1">
-            </div>
-        </div>
-        <button class="btn secondary" onclick="saveSettings()">💾 Сохранить настройки</button>
-    </div>
-
-    <button class="btn" onclick="runScanner()">🔍 Запустить сканер</button>
-
-    <div id="signalsList">
-        <div class="status">📭 Нет сигналов. Нажми "Запустить сканер"</div>
-    </div>
-    <div class="status" id="statusMessage"></div>
+<div class="header fade-in">
+    <h1>✦ CryptoSky</h1>
+    <span class="badge">● Live</span>
 </div>
+
+<!-- API URL -->
+<div class="glass fade-in" style="padding: 16px 18px;">
+    <div class="api-row">
+        <input type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
+        <button class="btn-small" onclick="setApiUrl()">Обновить</button>
+    </div>
+</div>
+
+<!-- Настройки -->
+<div class="glass fade-in">
+    <span class="label">⚙️ Параметры</span>
+    <div class="input-group">
+        <div class="field">
+            <label>Объём (M$)</label>
+            <input type="number" id="volumeFilter" value="50" step="10">
+        </div>
+        <div class="field">
+            <label>ATR %</label>
+            <input type="number" id="atrFilter" value="50" step="5">
+        </div>
+        <div class="field">
+            <label>Тейк x</label>
+            <input type="number" id="riskReward" value="1.5" step="0.1">
+        </div>
+    </div>
+    <button class="btn btn-secondary mt-1" onclick="saveSettings()">💾 Сохранить настройки</button>
+</div>
+
+<!-- Кнопки -->
+<div class="btn-group fade-in">
+    <button class="btn btn-primary" onclick="runScanner()">🚀 Запустить сканер</button>
+</div>
+
+<!-- Сигналы -->
+<div id="signalsContainer">
+    <div class="status">📭 Нет сигналов</div>
+</div>
+
+<div class="status" id="statusMessage" style="font-size:13px;"></div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    // --- API URL ---
     function getApiUrl() {
         let url = localStorage.getItem('apiUrl');
         if (!url) {
@@ -169,11 +371,12 @@
         const url = document.getElementById('apiUrlInput').value.trim();
         if (url) {
             localStorage.setItem('apiUrl', url);
-            document.getElementById('statusMessage').innerText = '✅ API адрес обновлён';
+            document.getElementById('statusMessage').innerText = '✅ API обновлён';
             loadSettings();
         }
     }
 
+    // --- ЗАГРУЗКА НАСТРОЕК ---
     async function loadSettings() {
         const apiUrl = getApiUrl();
         try {
@@ -189,6 +392,7 @@
         }
     }
 
+    // --- СОХРАНЕНИЕ НАСТРОЕК ---
     async function saveSettings() {
         const apiUrl = getApiUrl();
         const settings = {
@@ -199,7 +403,7 @@
         try {
             const resp = await fetch(apiUrl + '/settings', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(settings)
             });
             if (!resp.ok) throw new Error('Ошибка сохранения');
@@ -209,24 +413,84 @@
         }
     }
 
+    // --- ЗАПУСК СКАНЕРА ---
     async function runScanner() {
         const apiUrl = getApiUrl();
         document.getElementById('statusMessage').innerText = '⏳ Запуск сканера...';
         try {
             const resp = await fetch(apiUrl + '/run_scanner', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: 1907661832 })
             });
             if (!resp.ok) throw new Error('Ошибка запуска');
-            const data = await resp.json();
             document.getElementById('statusMessage').innerText = '✅ Сканер запущен. Ждите сигналов в Telegram!';
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ Ошибка запуска: ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ Ошибка: ' + e.message;
         }
     }
 
+    // --- ОТОБРАЖЕНИЕ СИГНАЛОВ ---
+    function displaySignals(signals) {
+        const container = document.getElementById('signalsContainer');
+        if (!signals || signals.length === 0) {
+            container.innerHTML = '<div class="status">📭 Нет сигналов</div>';
+            return;
+        }
+        let html = '';
+        signals.forEach((s, i) => {
+            const sideClass = s.side && s.side.includes('LONG') ? 'long' : 'shot';
+            const sideLabel = s.side || '—';
+            html += `
+                <div class="glass signal-card ${sideClass} fade-in" style="animation-delay: ${i * 0.06}s;">
+                    <div class="row">
+                        <span class="symbol">${s.symbol || '—'}</span>
+                        <span class="side ${sideClass}">${sideLabel}</span>
+                    </div>
+                    <div class="meta">
+                        <span>💰 <span class="highlight">${s.current_price || '—'}</span></span>
+                        <span>📊 ${s.signal_type || 'TOUCH'}</span>
+                    </div>
+                    <div class="meta">
+                        <span>Вход: <span class="highlight">${s.entry || '—'}</span></span>
+                        <span>Стоп: <span class="highlight">${s.stop || '—'}</span></span>
+                        <span>Тейк: <span class="highlight">${s.tp || '—'}</span></span>
+                    </div>
+                    <div class="meta">
+                        <span>Объём: <span class="highlight">${s.daily_volume_usd || '—'}M</span></span>
+                        <span>${s.time || ''}</span>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    // --- ПРИЁМ ДАННЫХ ОТ БОТА ---
+    window.Telegram.WebApp.onEvent('data', (data) => {
+        try {
+            const parsed = JSON.parse(data);
+            if (parsed.type === 'signals') {
+                displaySignals(parsed.data);
+                document.getElementById('statusMessage').innerText = `✅ Получено ${parsed.data.length} сигналов`;
+            }
+        } catch (e) {
+            console.error('Ошибка данных от бота:', e);
+        }
+    });
+
+    // --- ИНИЦИАЛИЗАЦИЯ ---
     loadSettings();
+
+    // Демо-сигналы для красоты (удаляются при получении реальных)
+    setTimeout(() => {
+        const demo = [
+            { symbol: 'BTCUSDT', side: 'SHORT (КАСАНИЕ)', current_price: '61234.56', entry: '61200.00', stop: '61300.00', tp: '61100.00', daily_volume_usd: '450.2', signal_type: 'TOUCH', time: '2026-08-03 20:59' },
+            { symbol: 'ETHUSDT', side: 'LONG (КАСАНИЕ)', current_price: '3456.78', entry: '3450.00', stop: '3440.00', tp: '3460.00', daily_volume_usd: '320.1', signal_type: 'TOUCH', time: '2026-08-03 20:58' }
+        ];
+        displaySignals(demo);
+    }, 600);
 </script>
+
 </body>
 </html>
