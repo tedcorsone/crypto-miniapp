@@ -18,7 +18,7 @@
             padding: 16px 14px 30px;
             background: linear-gradient(145deg, #e8e0d5 0%, #d6cdc0 100%);
             color: #2c2a28;
-            transition: background 0.9s ease;
+            transition: background 0.8s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -158,61 +158,6 @@
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
-        }
-
-        .status-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(44, 42, 40, 0.1);
-            border-top-color: #2c2a28;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            flex-shrink: 0;
-        }
-        .spinner.hidden {
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .status-main {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .status-sub {
-            font-size: 12px;
-            color: rgba(44, 42, 40, 0.5);
-            margin-left: 28px;
-        }
-
-        .progress-wrap {
-            margin-top: 6px;
-            margin-left: 28px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 3px;
-            background: rgba(44, 42, 40, 0.08);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-bar .fill {
-            height: 100%;
-            background: #2c2a28;
-            border-radius: 4px;
-            transition: width 0.4s ease;
-            width: 0%;
         }
 
         .label {
@@ -474,20 +419,6 @@
         <span class="badge" id="statusBadge">● Ожидание</span>
     </div>
 
-    <!-- СТАТУС -->
-    <div class="glass fade-in fade-in-d1" id="statusCard">
-        <div class="status-row">
-            <div class="spinner hidden" id="spinner"></div>
-            <div class="status-main" id="mainStatus"><span style="font-weight:600;">⏳</span> Ожидание запуска</div>
-        </div>
-        <div class="status-sub" id="subStatus"></div>
-        <div class="progress-wrap">
-            <div class="progress-bar">
-                <div class="fill" id="progressFill" style="width:0%;"></div>
-            </div>
-        </div>
-    </div>
-
     <!-- API -->
     <div class="glass fade-in fade-in-d1">
         <div class="api-row">
@@ -560,13 +491,9 @@
         }
     }
 
-    function setAppState(state, data) {
+    function setAppState(state) {
         const body = document.body;
         const badge = document.getElementById('statusBadge');
-        const mainStatus = document.getElementById('mainStatus');
-        const subStatus = document.getElementById('subStatus');
-        const spinner = document.getElementById('spinner');
-        const progress = document.getElementById('progressFill');
         const stopBtn = document.getElementById('stopBtn');
 
         body.className = '';
@@ -577,50 +504,30 @@
                 body.classList.add('state-scanning');
                 badge.classList.add('scanning');
                 badge.textContent = '🔍 Анализ...';
-                spinner.classList.remove('hidden');
-                const pct = data?.total > 0 ? Math.round((data.checked / data.total) * 100) : 0;
-                progress.style.width = pct + '%';
-                mainStatus.innerHTML = '<span style="font-weight:600;">🔍</span> Сканер запущен';
-                subStatus.textContent = data?.current_symbol ? `${data.current_symbol} (${data.checked || 0}/${data.total || 0})` : `Анализ... (${data?.checked || 0}/${data?.total || 0})`;
                 stopBtn.style.display = 'block';
                 break;
             case 'done':
                 body.classList.add('state-done');
                 badge.classList.add('done');
                 badge.textContent = '✅ Завершён';
-                spinner.classList.add('hidden');
-                progress.style.width = '100%';
-                mainStatus.innerHTML = '<span style="font-weight:600;">✅</span> Анализ завершён';
-                subStatus.textContent = data ? `Проверено ${data.total || 0} монет` : '';
                 stopBtn.style.display = 'none';
                 break;
             case 'stopped':
                 body.classList.add('state-stopped');
                 badge.classList.add('stopped');
                 badge.textContent = '⏹ Остановлен';
-                spinner.classList.add('hidden');
-                progress.style.width = '0%';
-                mainStatus.innerHTML = '<span style="font-weight:600;">⏹</span> Остановлен';
-                subStatus.textContent = '';
                 stopBtn.style.display = 'none';
                 break;
             case 'error':
                 body.classList.add('state-error');
                 badge.classList.add('error');
                 badge.textContent = '❌ Ошибка';
-                spinner.classList.add('hidden');
-                mainStatus.innerHTML = `<span style="font-weight:600;">❌</span> ${data?.current_symbol || 'Ошибка'}`;
-                subStatus.textContent = '';
                 stopBtn.style.display = 'none';
                 break;
             default:
                 body.className = '';
                 badge.className = 'badge';
                 badge.textContent = '● Ожидание';
-                spinner.classList.add('hidden');
-                progress.style.width = '0%';
-                mainStatus.innerHTML = '<span style="font-weight:600;">⏳</span> Ожидание запуска';
-                subStatus.textContent = '';
                 stopBtn.style.display = 'none';
                 break;
         }
@@ -633,10 +540,10 @@
             if (!resp.ok) return;
             const data = await resp.json();
 
-            if (data.status === 'scanning') setAppState('scanning', data);
-            else if (data.status === 'done') setAppState('done', data);
+            if (data.status === 'scanning') setAppState('scanning');
+            else if (data.status === 'done') setAppState('done');
             else if (data.status === 'stopped') setAppState('stopped');
-            else if (data.status === 'error') setAppState('error', data);
+            else if (data.status === 'error') setAppState('error');
             else setAppState('idle');
         } catch (e) {}
     }
@@ -644,7 +551,7 @@
     async function startStatusPolling() {
         if (statusInterval) clearInterval(statusInterval);
         await updateStatusUI();
-        statusInterval = setInterval(updateStatusUI, 2000);
+        statusInterval = setInterval(updateStatusUI, 3000);
     }
 
     async function stopScanner() {
