@@ -194,6 +194,15 @@
             gap: 12px;
         }
 
+        .btn-group-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-group-row .btn {
+            flex: 1;
+        }
+
         .api-row {
             display: flex;
             gap: 10px;
@@ -235,7 +244,7 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
-        /* --- КАРТОЧКИ СИГНАЛОВ (расширенные) --- */
+        /* --- КАРТОЧКИ СИГНАЛОВ --- */
         .signal-card {
             border-left: 3px solid #b8a99a;
             padding-left: 14px;
@@ -396,9 +405,13 @@
         <button class="btn btn-secondary mt-1" onclick="saveSettings()">💾 Сохранить</button>
     </div>
 
-    <!-- КНОПКИ -->
+    <!-- КНОПКИ (две в ряд) -->
     <div class="btn-group fade-in fade-in-d3">
         <button class="btn btn-primary" onclick="runScanner()">🚀 Запустить сканер</button>
+        <div class="btn-group-row">
+            <button class="btn btn-secondary" onclick="loadHistory()">📜 История</button>
+            <button class="btn btn-secondary" onclick="clearSignals()">🗑️ Очистить</button>
+        </div>
     </div>
 
     <!-- СИГНАЛЫ -->
@@ -484,6 +497,32 @@
         }
     }
 
+    async function loadHistory() {
+        const apiUrl = getApiUrl();
+        document.getElementById('statusMessage').innerText = '⏳ Загрузка истории...';
+        try {
+            const resp = await fetch(apiUrl + '/history');
+            if (!resp.ok) throw new Error('Ошибка загрузки');
+            const data = await resp.json();
+            if (data.length === 0) {
+                document.getElementById('statusMessage').innerText = '📭 История пуста';
+                displaySignals([]);
+                return;
+            }
+            displaySignals(data);
+            document.getElementById('statusMessage').innerText = `📜 Показано ${data.length} сигналов (за 7 дней)`;
+        } catch (e) {
+            document.getElementById('statusMessage').innerText = '❌ Ошибка: ' + e.message;
+        }
+    }
+
+    function clearSignals() {
+        if (confirm('Очистить список сигналов?')) {
+            displaySignals([]);
+            document.getElementById('statusMessage').innerText = '🗑️ Список очищен';
+        }
+    }
+
     function displaySignals(signals) {
         const container = document.getElementById('signalsContainer');
         if (!signals || signals.length === 0) {
@@ -494,9 +533,8 @@
         signals.forEach((s, i) => {
             const sideClass = s.side && s.side.includes('LONG') ? 'long' : 'shot';
             const sideLabel = s.side || '—';
-            const delay = i * 0.08;
+            const delay = i * 0.06;
 
-            // Статус светофора
             let statusBadge = '';
             if (s.atr_status === '🟢') statusBadge = '<span class="badge green">🟢 Низкий расход</span>';
             else if (s.atr_status === '🟠') statusBadge = '<span class="badge orange">🟠 Средний расход</span>';
@@ -551,7 +589,7 @@
 
     loadSettings();
 
-    // ДЕМО-СИГНАЛЫ (для красоты)
+    // ДЕМО-СИГНАЛЫ
     setTimeout(() => {
         const demo = [
             { symbol: 'BTCUSDT', side: 'SHORT (ОТБОЙ R1)', current_price: '61234.56', entry: '61200.00', stop: '61300.00', tp: '61100.00', daily_volume_usd: '450.2', signal_type: 'BOUNCE', level: '61250.00', risk_reward: '1:3.0', touches: 3, atr_used: '850.5', atr_consumed: '45.2', atr_status: '🟢', time: '2026-08-06 14:30' },
