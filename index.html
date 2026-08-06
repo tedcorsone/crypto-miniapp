@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CryptoSky</title>
+    <title>CryptoSky · Air</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -15,97 +15,45 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            padding: 16px 14px 30px;
-            background: linear-gradient(145deg, #e8e0d5 0%, #d6cdc0 100%);
-            color: #2c2a28;
-            transition: background 0.8s ease;
+            padding: 20px 16px 40px;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            background: linear-gradient(145deg, #e8e0d5 0%, #d6cdc0 100%);
+            color: #2c2a28;
+            position: relative;
         }
 
-        body.state-scanning {
-            background: linear-gradient(145deg, #f5e6c8 0%, #e8d5a8 100%);
-        }
-        body.state-done {
-            background: linear-gradient(145deg, #d4e8d4 0%, #b8d4b8 100%);
-        }
-        body.state-stopped {
-            background: linear-gradient(145deg, #f0d4d4 0%, #e0b8b8 100%);
-        }
-        body.state-error {
-            background: linear-gradient(145deg, #f0d0d0 0%, #e0b0b0 100%);
-        }
-
-        .bg-animation {
+        .glass-layer {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: 0;
             pointer-events: none;
-            overflow: hidden;
-        }
-
-        .bg-animation .orb {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.10;
-            filter: blur(60px);
-            animation: floatOrb 22s infinite alternate ease-in-out;
-        }
-
-        .bg-animation .orb:nth-child(1) {
-            width: 280px;
-            height: 280px;
-            background: #d4b896;
-            top: -60px;
-            left: -60px;
-            animation-duration: 24s;
-        }
-        .bg-animation .orb:nth-child(2) {
-            width: 340px;
-            height: 340px;
-            background: #c9b8a8;
-            bottom: -80px;
-            right: -80px;
-            animation-duration: 28s;
-            animation-delay: -5s;
-        }
-        .bg-animation .orb:nth-child(3) {
-            width: 180px;
-            height: 180px;
-            background: #e0d0c0;
-            top: 50%;
-            left: 50%;
-            animation-duration: 20s;
-            animation-delay: -9s;
-        }
-
-        @keyframes floatOrb {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(30px, -25px) scale(1.1); }
-            100% { transform: translate(-15px, 30px) scale(0.95); }
+            z-index: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(255, 245, 235, 0.2), transparent 60%),
+                        radial-gradient(circle at 80% 80%, rgba(235, 225, 215, 0.15), transparent 50%);
         }
 
         .container {
             position: relative;
             z-index: 1;
-            max-width: 400px;
+            max-width: 440px;
+            margin: 0 auto;
             width: 100%;
         }
 
         .glass {
-            background: rgba(255, 248, 242, 0.50);
-            backdrop-filter: blur(30px) saturate(1.2);
-            -webkit-backdrop-filter: blur(30px) saturate(1.2);
-            border: 1px solid rgba(255, 255, 255, 0.45);
-            border-radius: 24px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.04), 0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
-            transition: transform 0.2s ease;
+            background: rgba(255, 248, 242, 0.45);
+            backdrop-filter: blur(40px) saturate(1.2);
+            -webkit-backdrop-filter: blur(40px) saturate(1.2);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 32px;
+            padding: 20px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.08),
+                        0 1px 0 0 rgba(255, 255, 255, 0.6) inset;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .glass:active {
@@ -116,159 +64,148 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+            padding: 0 4px;
         }
 
         .header h1 {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: 700;
             color: #2c2a28;
             letter-spacing: -0.5px;
         }
 
-        .badge {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 12px;
-            border-radius: 40px;
-            background: rgba(44, 42, 40, 0.06);
+        .header .status {
+            font-size: 13px;
+            font-weight: 500;
             color: rgba(44, 42, 40, 0.5);
-            transition: all 0.4s ease;
-            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .badge.scanning {
-            background: rgba(200, 160, 60, 0.2);
-            color: #8a7a3a;
-            animation: pulse 1.2s infinite;
-        }
-        .badge.done {
-            background: rgba(80, 160, 80, 0.2);
-            color: #3a7a3a;
-        }
-        .badge.stopped {
-            background: rgba(200, 80, 80, 0.2);
-            color: #8a3a3a;
-        }
-        .badge.error {
-            background: rgba(200, 60, 60, 0.2);
-            color: #8a2a2a;
+        .header .status .dot {
+            width: 8px;
+            height: 8px;
+            background: #7d9b7a;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulseDot 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
         }
 
         .label {
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 600;
-            color: rgba(44, 42, 40, 0.3);
+            color: rgba(44, 42, 40, 0.35);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .input-group {
             display: flex;
-            gap: 6px;
             flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 4px;
         }
 
         .input-group .field {
             flex: 1;
-            min-width: 56px;
+            min-width: 70px;
         }
 
         .input-group .field label {
-            font-size: 9px;
+            font-size: 11px;
             color: rgba(44, 42, 40, 0.3);
             display: block;
+            margin-bottom: 4px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            margin-bottom: 2px;
         }
 
         .input-group .field input {
             width: 100%;
             background: rgba(255, 255, 255, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 14px;
-            padding: 10px 12px;
-            font-size: 14px;
+            border-radius: 18px;
+            padding: 14px 16px;
+            font-size: 16px;
             font-weight: 500;
             color: #2c2a28;
             outline: none;
+            transition: 0.25s ease;
             backdrop-filter: blur(10px);
         }
 
         .input-group .field input:focus {
             border-color: #b8a99a;
             background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 0 4px rgba(184, 169, 154, 0.15);
         }
 
         .btn {
             width: 100%;
-            padding: 12px 16px;
+            padding: 16px 20px;
             border: none;
-            border-radius: 18px;
-            font-size: 15px;
+            border-radius: 22px;
+            font-size: 17px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-        }
-
-        .btn:active {
-            transform: scale(0.96);
+            gap: 10px;
         }
 
         .btn-primary {
             background: rgba(44, 42, 40, 0.85);
             color: #f5f0ea;
-        }
-        .btn-primary:active {
-            background: rgba(44, 42, 40, 0.95);
+            box-shadow: 0 4px 16px rgba(44, 42, 40, 0.08);
+            backdrop-filter: blur(10px);
         }
 
-        .btn-danger {
-            background: rgba(200, 80, 80, 0.8);
-            color: #fff;
-        }
-        .btn-danger:active {
-            background: rgba(200, 80, 80, 0.9);
+        .btn-primary:active {
+            transform: scale(0.96);
+            background: rgba(44, 42, 40, 0.95);
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             color: #2c2a28;
+            backdrop-filter: blur(10px);
         }
+
         .btn-secondary:active {
             background: rgba(255, 255, 255, 0.6);
+            transform: scale(0.97);
         }
 
         .btn-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
-        .btn-row {
+        .btn-group-row {
             display: flex;
-            gap: 8px;
+            gap: 12px;
         }
-        .btn-row .btn {
+
+        .btn-group-row .btn {
             flex: 1;
         }
 
         .api-row {
             display: flex;
-            gap: 6px;
+            gap: 10px;
             align-items: center;
         }
 
@@ -276,9 +213,9 @@
             flex: 1;
             background: rgba(255, 255, 255, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 14px;
-            padding: 8px 12px;
-            font-size: 12px;
+            border-radius: 18px;
+            padding: 12px 16px;
+            font-size: 14px;
             color: #2c2a28;
             outline: none;
             backdrop-filter: blur(10px);
@@ -290,30 +227,33 @@
         }
 
         .api-row .btn-small {
-            padding: 8px 14px;
-            border-radius: 14px;
+            padding: 12px 20px;
+            border-radius: 18px;
             border: none;
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             color: #2c2a28;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 14px;
             cursor: pointer;
             white-space: nowrap;
         }
+
         .api-row .btn-small:active {
             background: rgba(255, 255, 255, 0.5);
         }
 
         .signal-card {
             border-left: 3px solid #b8a99a;
-            padding-left: 12px;
-            margin-bottom: 10px;
+            padding-left: 14px;
+            margin-bottom: 14px;
         }
+
         .signal-card.shot {
             border-left-color: #c9a8a8;
         }
+
         .signal-card.long {
             border-left-color: #a8c9b0;
         }
@@ -323,24 +263,30 @@
             justify-content: space-between;
             align-items: center;
         }
-        .signal-card .symbol {
+
+        .signal-card .row .symbol {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 18px;
+            color: #2c2a28;
         }
-        .signal-card .side {
-            font-size: 9px;
+
+        .signal-card .row .side {
+            font-size: 11px;
             font-weight: 600;
-            padding: 2px 10px;
-            border-radius: 30px;
+            padding: 3px 14px;
+            border-radius: 40px;
             text-transform: uppercase;
+            letter-spacing: 0.4px;
             background: rgba(44, 42, 40, 0.06);
             color: rgba(44, 42, 40, 0.6);
         }
-        .signal-card .side.shot {
+
+        .signal-card .row .side.shot {
             background: rgba(201, 168, 168, 0.15);
             color: #9a7a7a;
         }
-        .signal-card .side.long {
+
+        .signal-card .row .side.long {
             background: rgba(168, 201, 176, 0.15);
             color: #5a8a6a;
         }
@@ -348,11 +294,12 @@
         .signal-card .meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 3px 10px;
-            font-size: 11px;
+            gap: 4px 14px;
+            font-size: 13px;
             color: rgba(44, 42, 40, 0.4);
-            margin-top: 4px;
+            margin-top: 8px;
         }
+
         .signal-card .meta .highlight {
             color: #2c2a28;
             font-weight: 500;
@@ -360,21 +307,24 @@
 
         .signal-card .badge {
             display: inline-block;
-            font-size: 9px;
+            font-size: 11px;
             font-weight: 600;
-            padding: 2px 8px;
+            padding: 2px 10px;
             border-radius: 20px;
             background: rgba(44, 42, 40, 0.06);
             color: rgba(44, 42, 40, 0.5);
         }
+
         .signal-card .badge.green {
             background: rgba(125, 155, 122, 0.15);
             color: #5a8a6a;
         }
+
         .signal-card .badge.orange {
             background: rgba(200, 160, 100, 0.15);
             color: #b08a4a;
         }
+
         .signal-card .badge.red {
             background: rgba(200, 120, 120, 0.15);
             color: #9a5a5a;
@@ -382,44 +332,50 @@
 
         .status-text {
             text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             color: rgba(44, 42, 40, 0.25);
-            padding: 12px 0 6px;
+            padding: 20px 0;
+            letter-spacing: 0.3px;
         }
 
         .fade-in {
-            animation: fadeUp 0.4s ease both;
+            animation: fadeUp 0.6s ease both;
         }
-        .fade-in-d1 { animation-delay: 0.04s; }
-        .fade-in-d2 { animation-delay: 0.08s; }
-        .fade-in-d3 { animation-delay: 0.12s; }
+        .fade-in-d1 { animation-delay: 0.05s; }
+        .fade-in-d2 { animation-delay: 0.1s; }
+        .fade-in-d3 { animation-delay: 0.15s; }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(10px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from {
+                opacity: 0;
+                transform: translateY(16px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
-        .mt-1 { margin-top: 4px; }
+        .mt-1 { margin-top: 8px; }
+        .flex { display: flex; align-items: center; gap: 8px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .gap-1 { gap: 6px; }
         ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
 <body>
 
-<div class="bg-animation">
-    <div class="orb"></div>
-    <div class="orb"></div>
-    <div class="orb"></div>
-</div>
+<div class="glass-layer"></div>
 
 <div class="container">
 
-    <!-- HEADER -->
     <div class="header fade-in">
         <h1>✦ CryptoSky</h1>
-        <span class="badge" id="statusBadge">● Ожидание</span>
+        <div class="status">
+            <span class="dot"></span> Активен
+        </div>
     </div>
 
-    <!-- API -->
     <div class="glass fade-in fade-in-d1">
         <div class="api-row">
             <input type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
@@ -427,7 +383,6 @@
         </div>
     </div>
 
-    <!-- НАСТРОЙКИ -->
     <div class="glass fade-in fade-in-d2">
         <span class="label">⚙️ Параметры</span>
         <div class="input-group">
@@ -447,30 +402,25 @@
         <button class="btn btn-secondary mt-1" onclick="saveSettings()">💾 Сохранить</button>
     </div>
 
-    <!-- КНОПКИ -->
     <div class="btn-group fade-in fade-in-d3">
         <button class="btn btn-primary" onclick="runScanner()">🚀 Запустить сканер</button>
-        <button class="btn btn-danger" onclick="stopScanner()" id="stopBtn" style="display:none;">⏹ Остановить</button>
-        <div class="btn-row">
+        <div class="btn-group-row">
             <button class="btn btn-secondary" onclick="loadHistory()">📜 История</button>
             <button class="btn btn-secondary" onclick="clearSignals()">🗑️ Очистить</button>
         </div>
     </div>
 
-    <!-- СИГНАЛЫ -->
     <div id="signalsContainer">
         <div class="status-text">📭 Нет сигналов</div>
     </div>
 
-    <div class="status-text" id="statusMessage" style="font-size:11px; padding-top: 2px;"></div>
+    <div class="status-text" id="statusMessage" style="font-size:13px;"></div>
 
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
-
-    let statusInterval = null;
 
     function getApiUrl() {
         let url = localStorage.getItem('apiUrl');
@@ -491,82 +441,6 @@
         }
     }
 
-    function setAppState(state) {
-        const body = document.body;
-        const badge = document.getElementById('statusBadge');
-        const stopBtn = document.getElementById('stopBtn');
-
-        body.className = '';
-        badge.className = 'badge';
-
-        switch (state) {
-            case 'scanning':
-                body.classList.add('state-scanning');
-                badge.classList.add('scanning');
-                badge.textContent = '🔍 Анализ...';
-                stopBtn.style.display = 'block';
-                break;
-            case 'done':
-                body.classList.add('state-done');
-                badge.classList.add('done');
-                badge.textContent = '✅ Завершён';
-                stopBtn.style.display = 'none';
-                break;
-            case 'stopped':
-                body.classList.add('state-stopped');
-                badge.classList.add('stopped');
-                badge.textContent = '⏹ Остановлен';
-                stopBtn.style.display = 'none';
-                break;
-            case 'error':
-                body.classList.add('state-error');
-                badge.classList.add('error');
-                badge.textContent = '❌ Ошибка';
-                stopBtn.style.display = 'none';
-                break;
-            default:
-                body.className = '';
-                badge.className = 'badge';
-                badge.textContent = '● Ожидание';
-                stopBtn.style.display = 'none';
-                break;
-        }
-    }
-
-    async function updateStatusUI() {
-        const apiUrl = getApiUrl();
-        try {
-            const resp = await fetch(apiUrl + '/status');
-            if (!resp.ok) return;
-            const data = await resp.json();
-
-            if (data.status === 'scanning') setAppState('scanning');
-            else if (data.status === 'done') setAppState('done');
-            else if (data.status === 'stopped') setAppState('stopped');
-            else if (data.status === 'error') setAppState('error');
-            else setAppState('idle');
-        } catch (e) {}
-    }
-
-    async function startStatusPolling() {
-        if (statusInterval) clearInterval(statusInterval);
-        await updateStatusUI();
-        statusInterval = setInterval(updateStatusUI, 3000);
-    }
-
-    async function stopScanner() {
-        const apiUrl = getApiUrl();
-        document.getElementById('statusMessage').innerText = '⏳ Остановка...';
-        try {
-            const resp = await fetch(apiUrl + '/stop_scanner', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
-            const data = await resp.json();
-            document.getElementById('statusMessage').innerText = data.status === 'stop_requested' ? '⏹ Остановлен' : 'ℹ️ Не запущен';
-            await updateStatusUI();
-        } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
-        }
-    }
-
     async function loadSettings() {
         const apiUrl = getApiUrl();
         try {
@@ -578,7 +452,7 @@
             if (data.risk_reward) document.getElementById('riskReward').value = data.risk_reward;
             document.getElementById('statusMessage').innerText = '✅ Настройки загружены';
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ Ошибка загрузки: ' + e.message;
         }
     }
 
@@ -598,13 +472,13 @@
             if (!resp.ok) throw new Error('Ошибка сохранения');
             document.getElementById('statusMessage').innerText = '✅ Настройки сохранены!';
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ Ошибка сохранения: ' + e.message;
         }
     }
 
     async function runScanner() {
         const apiUrl = getApiUrl();
-        document.getElementById('statusMessage').innerText = '⏳ Запуск...';
+        document.getElementById('statusMessage').innerText = '⏳ Запуск сканера...';
         try {
             const resp = await fetch(apiUrl + '/run_scanner', {
                 method: 'POST',
@@ -612,16 +486,15 @@
                 body: JSON.stringify({ chat_id: 1907661832 })
             });
             if (!resp.ok) throw new Error('Ошибка запуска');
-            document.getElementById('statusMessage').innerText = '✅ Запущен';
-            startStatusPolling();
+            document.getElementById('statusMessage').innerText = '✅ Сканер запущен. Ждите сигналов в Telegram!';
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ Ошибка: ' + e.message;
         }
     }
 
     async function loadHistory() {
         const apiUrl = getApiUrl();
-        document.getElementById('statusMessage').innerText = '⏳ История...';
+        document.getElementById('statusMessage').innerText = '⏳ Загрузка истории...';
         try {
             const resp = await fetch(apiUrl + '/history');
             if (!resp.ok) throw new Error('Ошибка загрузки');
@@ -632,16 +505,16 @@
                 return;
             }
             displaySignals(data);
-            document.getElementById('statusMessage').innerText = `📜 ${data.length} сигналов`;
+            document.getElementById('statusMessage').innerText = `📜 Показано ${data.length} сигналов (за 7 дней)`;
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ Ошибка: ' + e.message;
         }
     }
 
     function clearSignals() {
-        if (confirm('Очистить список?')) {
+        if (confirm('Очистить список сигналов?')) {
             displaySignals([]);
-            document.getElementById('statusMessage').innerText = '🗑️ Очищено';
+            document.getElementById('statusMessage').innerText = '🗑️ Список очищен';
         }
     }
 
@@ -655,11 +528,12 @@
         signals.forEach((s, i) => {
             const sideClass = s.side && s.side.includes('LONG') ? 'long' : 'shot';
             const sideLabel = s.side || '—';
-            const delay = i * 0.05;
-            let badge = '';
-            if (s.atr_status === '🟢') badge = '<span class="badge green">🔋 Много энергии</span>';
-            else if (s.atr_status === '🟠') badge = '<span class="badge orange">⚡ Средний запас</span>';
-            else if (s.atr_status === '🔴') badge = '<span class="badge red">🪫 Мало энергии</span>';
+            const delay = i * 0.06;
+
+            let statusBadge = '';
+            if (s.atr_status === '🟢') statusBadge = '<span class="badge green">🔋 Много энергии</span>';
+            else if (s.atr_status === '🟠') statusBadge = '<span class="badge orange">⚡ Средний запас</span>';
+            else if (s.atr_status === '🔴') statusBadge = '<span class="badge red">🪫 Мало энергии</span>';
 
             html += `
                 <div class="glass signal-card ${sideClass} fade-in" style="animation-delay: ${delay}s;">
@@ -679,12 +553,12 @@
                     </div>
                     <div class="meta">
                         <span>📐 ${s.risk_reward || '—'}</span>
-                        <span>🔁 ${s.touches || 0}</span>
+                        <span>🔁 Касаний: <span class="highlight">${s.touches || 0}</span></span>
                     </div>
                     <div class="meta">
-                        <span>📊 ${s.atr_used || '—'}</span>
-                        <span>⏳ ${s.atr_consumed || 0}%</span>
-                        ${badge}
+                        <span>📊 ATR: <span class="highlight">${s.atr_used || '—'}</span></span>
+                        <span>⏳ Запас: ${s.atr_consumed || 0}%</span>
+                        ${statusBadge}
                     </div>
                     <div class="meta">
                         <span>💵 ${s.daily_volume_usd || '—'}M</span>
@@ -701,13 +575,14 @@
             const parsed = JSON.parse(data);
             if (parsed.type === 'signals') {
                 displaySignals(parsed.data);
-                document.getElementById('statusMessage').innerText = `✅ ${parsed.data.length} сигналов`;
+                document.getElementById('statusMessage').innerText = `✅ Получено ${parsed.data.length} сигналов`;
             }
-        } catch (e) {}
+        } catch (e) {
+            console.error('Ошибка данных от бота:', e);
+        }
     });
 
     loadSettings();
-    startStatusPolling();
 
     setTimeout(() => {
         const demo = [
