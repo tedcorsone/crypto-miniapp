@@ -244,6 +244,57 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
+        /* --- СТАТУС СКАНЕРА --- */
+        .scan-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 4px;
+        }
+
+        .scan-status .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(44, 42, 40, 0.1);
+            border-top-color: #2c2a28;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .scan-status .spinner.hidden {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .scan-status .info {
+            font-size: 14px;
+            color: rgba(44, 42, 40, 0.5);
+        }
+
+        .scan-status .info .highlight {
+            color: #2c2a28;
+            font-weight: 500;
+        }
+
+        .scan-status .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(44, 42, 40, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .scan-status .progress-bar .fill {
+            height: 100%;
+            background: #2c2a28;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
         .signal-card {
             border-left: 3px solid #b8a99a;
             padding-left: 14px;
@@ -383,6 +434,19 @@
         </div>
     </div>
 
+    <!-- СТАТУС СКАНЕРА -->
+    <div class="glass fade-in fade-in-d1" id="statusCard">
+        <div class="scan-status">
+            <div class="spinner hidden" id="spinner"></div>
+            <div class="info" id="statusInfo">
+                <span class="highlight">⏳</span> Ожидание запуска
+            </div>
+            <div class="progress-bar">
+                <div class="fill" id="progressFill" style="width:0%;"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="glass fade-in fade-in-d2">
         <span class="label">⚙️ Параметры</span>
         <div class="input-group">
@@ -422,6 +486,8 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    let statusInterval = null;
+
     function getApiUrl() {
         let url = localStorage.getItem('apiUrl');
         if (!url) {
@@ -441,6 +507,47 @@
         }
     }
 
+    // ---- СТАТУС СКАНЕРА ----
+    async function updateStatusUI() {
+        const apiUrl = getApiUrl();
+        try {
+            const resp = await fetch(apiUrl + '/status');
+            if (!resp.ok) return;
+            const data = await resp.json();
+
+            const spinner = document.getElementById('spinner');
+            const info = document.getElementById('statusInfo');
+            const progress = document.getElementById('progressFill');
+
+            if (data.status === 'scanning') {
+                spinner.classList.remove('hidden');
+                const pct = data.total > 0 ? Math.round((data.checked / data.total) * 100) : 0;
+                progress.style.width = pct + '%';
+                info.innerHTML = `<span class="highlight">🔍</span> Анализ: ${data.checked} / ${data.total} монет (${data.current_symbol || ''})`;
+            } else if (data.status === 'done') {
+                spinner.classList.add('hidden');
+                progress.style.width = '100%';
+                info.innerHTML = `<span class="highlight">✅</span> Анализ завершён (${data.total} монет)`;
+            } else if (data.status === 'error') {
+                spinner.classList.add('hidden');
+                info.innerHTML = `<span class="highlight">❌</span> ${data.current_symbol || 'Ошибка'}`;
+            } else {
+                spinner.classList.add('hidden');
+                progress.style.width = '0%';
+                info.innerHTML = `<span class="highlight">⏳</span> Ожидание запуска`;
+            }
+        } catch (e) {
+            // игнорируем ошибки, просто оставляем статус
+        }
+    }
+
+    async function startStatusPolling() {
+        if (statusInterval) clearInterval(statusInterval);
+        await updateStatusUI();
+        statusInterval = setInterval(updateStatusUI, 2000);
+    }
+
+    // ---- ЗАГРУЗКА НАСТРОЕК ----
     async function loadSettings() {
         const apiUrl = getApiUrl();
         try {
@@ -456,6 +563,7 @@
         }
     }
 
+    // ---- СОХРАНЕНИЕ НАСТРОЕК ----
     async function saveSettings() {
         const apiUrl = getApiUrl();
         const settings = {
@@ -476,6 +584,7 @@
         }
     }
 
+    // ---- ЗАПУСК СКАНЕРА ----
     async function runScanner() {
         const apiUrl = getApiUrl();
         document.getElementById('statusMessage').innerText = '⏳ Запуск сканера...';
@@ -486,12 +595,14 @@
                 body: JSON.stringify({ chat_id: 1907661832 })
             });
             if (!resp.ok) throw new Error('Ошибка запуска');
-            document.getElementById('statusMessage').innerText = '✅ Сканер запущен. Ждите сигналов в Telegram!';
+            document.getElementById('statusMessage').innerText = '✅ Сканер запущен. Смотрите прогресс!';
+            startStatusPolling();
         } catch (e) {
             document.getElementById('statusMessage').innerText = '❌ Ошибка: ' + e.message;
         }
     }
 
+    // ---- ИСТОРИЯ ----
     async function loadHistory() {
         const apiUrl = getApiUrl();
         document.getElementById('statusMessage').innerText = '⏳ Загрузка истории...';
@@ -518,6 +629,7 @@
         }
     }
 
+    // ---- ОТОБРАЖЕНИЕ СИГНАЛОВ ----
     function displaySignals(signals) {
         const container = document.getElementById('signalsContainer');
         if (!signals || signals.length === 0) {
@@ -570,6 +682,7 @@
         container.innerHTML = html;
     }
 
+    // ---- ПРИЁМ ДАННЫХ ОТ БОТА ----
     window.Telegram.WebApp.onEvent('data', (data) => {
         try {
             const parsed = JSON.parse(data);
@@ -582,8 +695,11 @@
         }
     });
 
+    // ---- ИНИЦИАЛИЗАЦИЯ ----
     loadSettings();
+    startStatusPolling();
 
+    // ДЕМО-СИГНАЛЫ
     setTimeout(() => {
         const demo = [
             { symbol: 'BTCUSDT', side: 'SHORT (ОТБОЙ R1)', current_price: '61234.56', entry: '61200.00', stop: '61300.00', tp: '61100.00', daily_volume_usd: '450.2', signal_type: 'BOUNCE', level: '61250.00', risk_reward: '1:3.0', touches: 3, atr_used: '850.5', atr_consumed: '45.2', atr_status: '🟢', time: '2026-08-06 14:30' },
