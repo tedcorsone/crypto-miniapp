@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CryptoSky · Mini App</title>
+    <title>CryptoSky · Neo</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* --- RESET & BASE --- */
         * {
             margin: 0;
             padding: 0;
@@ -13,30 +14,89 @@
         }
 
         body {
-            background: #0b0e14;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #080c16;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             color: #fff;
             padding: 16px 16px 40px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        /* --- GLASS CARD --- */
+        /* --- АНИМИРОВАННЫЙ ФОН (частицы) --- */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 215, 0, 0.2);
+            border-radius: 50%;
+            animation: floatParticle 20s infinite linear;
+        }
+        .particle:nth-child(1) { left: 10%; animation-duration: 22s; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 30%; animation-duration: 18s; animation-delay: 2s; width: 6px; height: 6px; }
+        .particle:nth-child(3) { left: 50%; animation-duration: 25s; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 70%; animation-duration: 20s; animation-delay: 1s; width: 5px; height: 5px; }
+        .particle:nth-child(5) { left: 90%; animation-duration: 23s; animation-delay: 3s; }
+        .particle:nth-child(6) { left: 20%; animation-duration: 19s; animation-delay: 5s; width: 7px; height: 7px; }
+        .particle:nth-child(7) { left: 60%; animation-duration: 21s; animation-delay: 2s; }
+        .particle:nth-child(8) { left: 80%; animation-duration: 24s; animation-delay: 4s; width: 5px; height: 5px; }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- ОСНОВНОЙ КОНТЕЙНЕР --- */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- GLASS CARD (улучшенная) --- */
         .glass {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 20px 18px;
             margin-bottom: 16px;
-            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6);
-            transition: all 0.25s ease;
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .glass:active {
-            transform: scale(0.99);
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+        }
+
+        .glass:hover {
+            border-color: rgba(255, 215, 0, 0.15);
+            transform: translateY(-2px);
         }
 
         /* --- HEADER --- */
@@ -44,47 +104,59 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            padding: 0 4px;
         }
 
         .header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #f5b041, #f1c40f);
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f7dc6f, #f1c40f, #e67e22);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.5px;
         }
 
-        .header .badge {
-            background: rgba(255, 215, 0, 0.15);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 40px;
-            padding: 4px 14px;
-            font-size: 11px;
+        .header .status-dot {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
             font-weight: 600;
-            color: #f1c40f;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .header .status-dot span {
+            width: 8px;
+            height: 8px;
+            background: #51cf66;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulseDot 2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
         }
 
         /* --- LABELS --- */
         .label {
-            font-size: 13px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
+            letter-spacing: 0.8px;
             display: block;
+            margin-bottom: 6px;
         }
 
-        /* --- INPUTS --- */
+        /* --- INPUTS (неоновые) --- */
         .input-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 6px;
+            gap: 10px;
+            margin-top: 4px;
         }
 
         .input-group .field {
@@ -93,69 +165,74 @@
         }
 
         .input-group .field label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.35);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.25);
             display: block;
             margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .input-group .field input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 12px 14px;
-            font-size: 15px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 14px 14px;
+            font-size: 16px;
             font-weight: 500;
             color: #fff;
             outline: none;
-            transition: 0.2s;
+            transition: 0.25s ease;
         }
 
         .input-group .field input:focus {
             border-color: #f1c40f;
-            background: rgba(255, 215, 0, 0.06);
-            box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.1);
+            background: rgba(255, 215, 0, 0.05);
+            box-shadow: 0 0 0 4px rgba(241, 196, 15, 0.08);
         }
 
-        /* --- BUTTONS --- */
+        /* --- КНОПКИ (уникальные) --- */
         .btn {
             width: 100%;
             padding: 16px 20px;
             border: none;
-            border-radius: 18px;
+            border-radius: 20px;
             font-size: 17px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #f5b041, #f1c40f);
-            color: #0b0e14;
-            border: none;
-            box-shadow: 0 8px 24px rgba(241, 196, 15, 0.2);
+            color: #080c16;
+            box-shadow: 0 8px 30px rgba(241, 196, 15, 0.25);
         }
 
         .btn-primary:active {
-            transform: scale(0.97);
-            box-shadow: 0 4px 12px rgba(241, 196, 15, 0.15);
+            transform: scale(0.96);
+            box-shadow: 0 4px 16px rgba(241, 196, 15, 0.15);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #fff;
         }
 
         .btn-secondary:active {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-glow {
+            box-shadow: 0 0 30px rgba(241, 196, 15, 0.1);
         }
 
         .btn-group {
@@ -164,11 +241,12 @@
             gap: 12px;
         }
 
-        /* --- SIGNAL CARDS --- */
+        /* --- СИГНАЛЫ (карточки с неоновым свечением) --- */
         .signal-card {
-            border-left: 4px solid #f1c40f;
-            padding-left: 16px;
+            border-left: 3px solid #f1c40f;
+            padding-left: 14px;
             margin-bottom: 14px;
+            transition: 0.2s;
         }
 
         .signal-card.shot {
@@ -188,14 +266,17 @@
 
         .signal-card .row .symbol {
             font-weight: 700;
-            font-size: 17px;
+            font-size: 18px;
+            letter-spacing: -0.3px;
         }
 
         .signal-card .row .side {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 2px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 14px;
             border-radius: 40px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
         }
 
         .signal-card .row .side.shot {
@@ -211,16 +292,10 @@
         .signal-card .meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px 18px;
+            gap: 8px 16px;
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.35);
             margin-top: 8px;
-        }
-
-        .signal-card .meta span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
         .signal-card .meta .highlight {
@@ -228,28 +303,19 @@
             font-weight: 500;
         }
 
-        /* --- STATUS --- */
-        .status {
-            text-align: center;
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.3);
-            padding: 20px 0;
-        }
-
-        /* --- API URL --- */
+        /* --- API ROW --- */
         .api-row {
             display: flex;
             gap: 10px;
             align-items: center;
-            margin-top: 6px;
         }
 
         .api-row input {
             flex: 1;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 10px 14px;
+            border-radius: 16px;
+            padding: 12px 14px;
             font-size: 13px;
             color: #fff;
             outline: none;
@@ -260,97 +326,129 @@
         }
 
         .api-row .btn-small {
-            padding: 10px 18px;
-            border-radius: 14px;
+            padding: 12px 20px;
+            border-radius: 16px;
             border: none;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
             color: #fff;
             font-weight: 600;
             font-size: 13px;
             cursor: pointer;
             white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .api-row .btn-small:active {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- STATUS --- */
+        .status {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.2);
+            padding: 20px 0;
+            letter-spacing: 0.3px;
         }
 
         /* --- ANIMATIONS --- */
         .fade-in {
-            animation: fadeUp 0.5s ease both;
+            animation: fadeUp 0.6s ease both;
         }
+
+        .fade-in-d1 { animation-delay: 0.05s; }
+        .fade-in-d2 { animation-delay: 0.1s; }
+        .fade-in-d3 { animation-delay: 0.15s; }
+        .fade-in-d4 { animation-delay: 0.2s; }
 
         @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(12px);
+                transform: translateY(20px) scale(0.98);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
         /* --- UTILS --- */
         .mt-1 { margin-top: 8px; }
         .mt-2 { margin-top: 16px; }
-        .gap-1 { gap: 12px; }
-        .flex { display: flex; align-items: center; }
+        .flex { display: flex; align-items: center; gap: 8px; }
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .op-5 { opacity: 0.5; }
+        .gap-1 { gap: 10px; }
 
         /* --- SCROLLBAR --- */
-        ::-webkit-scrollbar {
-            width: 0;
-        }
+        ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
 <body>
 
-<div class="header fade-in">
-    <h1>✦ CryptoSky</h1>
-    <span class="badge">● Live</span>
+<!-- Анимированный фон -->
+<div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
 </div>
 
-<!-- API URL -->
-<div class="glass fade-in" style="padding: 16px 18px;">
-    <div class="api-row">
-        <input type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
-        <button class="btn-small" onclick="setApiUrl()">Обновить</button>
-    </div>
-</div>
+<div class="container">
 
-<!-- Настройки -->
-<div class="glass fade-in">
-    <span class="label">⚙️ Параметры</span>
-    <div class="input-group">
-        <div class="field">
-            <label>Объём (M$)</label>
-            <input type="number" id="volumeFilter" value="50" step="10">
-        </div>
-        <div class="field">
-            <label>ATR %</label>
-            <input type="number" id="atrFilter" value="50" step="5">
-        </div>
-        <div class="field">
-            <label>Тейк x</label>
-            <input type="number" id="riskReward" value="1.5" step="0.1">
+    <!-- HEADER -->
+    <div class="header fade-in">
+        <h1>✦ CryptoSky</h1>
+        <div class="status-dot">
+            <span></span> Live
         </div>
     </div>
-    <button class="btn btn-secondary mt-1" onclick="saveSettings()">💾 Сохранить настройки</button>
-</div>
 
-<!-- Кнопки -->
-<div class="btn-group fade-in">
-    <button class="btn btn-primary" onclick="runScanner()">🚀 Запустить сканер</button>
-</div>
+    <!-- API URL -->
+    <div class="glass fade-in fade-in-d1">
+        <div class="api-row">
+            <input type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
+            <button class="btn-small" onclick="setApiUrl()">Обновить</button>
+        </div>
+    </div>
 
-<!-- Сигналы -->
-<div id="signalsContainer">
-    <div class="status">📭 Нет сигналов</div>
-</div>
+    <!-- НАСТРОЙКИ -->
+    <div class="glass fade-in fade-in-d2">
+        <span class="label">⚙️ Параметры</span>
+        <div class="input-group">
+            <div class="field">
+                <label>Объём (M$)</label>
+                <input type="number" id="volumeFilter" value="50" step="10">
+            </div>
+            <div class="field">
+                <label>ATR %</label>
+                <input type="number" id="atrFilter" value="50" step="5">
+            </div>
+            <div class="field">
+                <label>Тейк x</label>
+                <input type="number" id="riskReward" value="1.5" step="0.1">
+            </div>
+        </div>
+        <button class="btn btn-secondary mt-1" onclick="saveSettings()">💾 Сохранить настройки</button>
+    </div>
 
-<div class="status" id="statusMessage" style="font-size:13px;"></div>
+    <!-- КНОПКИ -->
+    <div class="btn-group fade-in fade-in-d3">
+        <button class="btn btn-primary btn-glow" onclick="runScanner()">🚀 Запустить сканер</button>
+    </div>
+
+    <!-- СИГНАЛЫ -->
+    <div id="signalsContainer">
+        <div class="status">📭 Нет сигналов</div>
+    </div>
+
+    <div class="status" id="statusMessage" style="font-size:13px;"></div>
+
+</div>
 
 <script>
     const tg = window.Telegram.WebApp;
@@ -441,8 +539,9 @@
         signals.forEach((s, i) => {
             const sideClass = s.side && s.side.includes('LONG') ? 'long' : 'shot';
             const sideLabel = s.side || '—';
+            const delay = i * 0.06;
             html += `
-                <div class="glass signal-card ${sideClass} fade-in" style="animation-delay: ${i * 0.06}s;">
+                <div class="glass signal-card ${sideClass} fade-in" style="animation-delay: ${delay}s;">
                     <div class="row">
                         <span class="symbol">${s.symbol || '—'}</span>
                         <span class="side ${sideClass}">${sideLabel}</span>
@@ -482,15 +581,17 @@
     // --- ИНИЦИАЛИЗАЦИЯ ---
     loadSettings();
 
-    // Демо-сигналы для красоты (удаляются при получении реальных)
+    // ДЕМО-СИГНАЛЫ (для красоты)
     setTimeout(() => {
         const demo = [
             { symbol: 'BTCUSDT', side: 'SHORT (КАСАНИЕ)', current_price: '61234.56', entry: '61200.00', stop: '61300.00', tp: '61100.00', daily_volume_usd: '450.2', signal_type: 'TOUCH', time: '2026-08-03 20:59' },
             { symbol: 'ETHUSDT', side: 'LONG (КАСАНИЕ)', current_price: '3456.78', entry: '3450.00', stop: '3440.00', tp: '3460.00', daily_volume_usd: '320.1', signal_type: 'TOUCH', time: '2026-08-03 20:58' }
         ];
         displaySignals(demo);
-    }, 600);
+    }, 700);
 </script>
 
+</body>
+</html>
 </body>
 </html>
