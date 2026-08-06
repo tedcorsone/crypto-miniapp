@@ -15,7 +15,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
-            padding: 20px 16px 40px;
+            padding: 16px 14px 30px;
             display: flex;
             flex-direction: column;
             background: linear-gradient(145deg, #e8e0d5 0%, #d6cdc0 100%);
@@ -27,15 +27,12 @@
         body.state-scanning {
             background: linear-gradient(145deg, #f5e6c8 0%, #e8d5a8 100%);
         }
-
         body.state-done {
             background: linear-gradient(145deg, #d4e8d4 0%, #b8d4b8 100%);
         }
-
         body.state-stopped {
             background: linear-gradient(145deg, #f0d4d4 0%, #e0b8b8 100%);
         }
-
         body.state-error {
             background: linear-gradient(145deg, #f0d0d0 0%, #e0b0b0 100%);
         }
@@ -50,26 +47,26 @@
             z-index: 0;
             background: radial-gradient(circle at 20% 20%, rgba(255, 245, 235, 0.2), transparent 60%),
                         radial-gradient(circle at 80% 80%, rgba(235, 225, 215, 0.15), transparent 50%);
-            transition: opacity 0.8s ease;
         }
 
         .container {
             position: relative;
             z-index: 1;
-            max-width: 440px;
+            max-width: 420px;
             margin: 0 auto;
             width: 100%;
         }
 
+        /* --- GLASS КАРТОЧКИ --- */
         .glass {
-            background: rgba(255, 248, 242, 0.45);
+            background: rgba(255, 248, 242, 0.5);
             backdrop-filter: blur(40px) saturate(1.2);
             -webkit-backdrop-filter: blur(40px) saturate(1.2);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 32px;
-            padding: 20px 18px;
-            margin-bottom: 16px;
-            box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.08),
+            border-radius: 28px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 8px 30px -8px rgba(0, 0, 0, 0.06),
                         0 1px 0 0 rgba(255, 255, 255, 0.6) inset;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
@@ -78,31 +75,32 @@
             transform: scale(0.98);
         }
 
-        /* --- HEADER С БАДЖЕМ --- */
+        /* --- HEADER --- */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 16px;
-            padding: 0 4px;
+            margin-bottom: 14px;
+            padding: 0 2px;
         }
 
         .header h1 {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: #2c2a28;
             letter-spacing: -0.5px;
         }
 
         .status-badge {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
-            padding: 6px 16px;
+            padding: 5px 14px;
             border-radius: 40px;
             background: rgba(44, 42, 40, 0.06);
             color: rgba(44, 42, 40, 0.5);
             transition: all 0.4s ease;
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .status-badge.scanning {
@@ -110,17 +108,14 @@
             color: #8a7a3a;
             animation: pulseBadge 1.2s infinite;
         }
-
         .status-badge.done {
             background: rgba(80, 160, 80, 0.2);
             color: #3a7a3a;
         }
-
         .status-badge.stopped {
             background: rgba(200, 80, 80, 0.2);
             color: #8a3a3a;
         }
-
         .status-badge.error {
             background: rgba(200, 60, 60, 0.2);
             color: #8a2a2a;
@@ -128,14 +123,14 @@
 
         @keyframes pulseBadge {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.5; }
         }
 
-        /* --- СТАТУС СКАНЕРА (ГЛАВНЫЙ) --- */
+        /* --- СТАТУС СКАНЕРА --- */
         .scan-status {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
         }
 
         .scan-status .main-row {
@@ -145,15 +140,14 @@
         }
 
         .scan-status .spinner {
-            width: 22px;
-            height: 22px;
-            border: 2px solid rgba(44, 42, 40, 0.1);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(44, 42, 40, 0.12);
             border-top-color: #2c2a28;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             flex-shrink: 0;
         }
-
         .scan-status .spinner.hidden {
             display: none;
         }
@@ -163,30 +157,31 @@
         }
 
         .scan-status .main-text {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 500;
             color: #2c2a28;
+            line-height: 1.3;
         }
-
         .scan-status .main-text .highlight {
             font-weight: 600;
         }
 
         .scan-status .sub-text {
-            font-size: 14px;
+            font-size: 13px;
             color: rgba(44, 42, 40, 0.5);
-            margin-left: 34px;
+            margin-left: 32px;
+            line-height: 1.3;
         }
 
         .scan-status .progress-bar {
             width: 100%;
-            height: 4px;
-            background: rgba(44, 42, 40, 0.1);
+            height: 3px;
+            background: rgba(44, 42, 40, 0.08);
             border-radius: 4px;
             overflow: hidden;
-            margin-left: 34px;
+            margin-left: 32px;
+            margin-top: 2px;
         }
-
         .scan-status .progress-bar .fill {
             height: 100%;
             background: #2c2a28;
@@ -195,33 +190,33 @@
             width: 0%;
         }
 
+        /* --- ЛЕЙБЛЫ --- */
         .label {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            color: rgba(44, 42, 40, 0.35);
+            color: rgba(44, 42, 40, 0.3);
             text-transform: uppercase;
             letter-spacing: 0.6px;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .input-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 4px;
+            gap: 8px;
         }
 
         .input-group .field {
             flex: 1;
-            min-width: 70px;
+            min-width: 60px;
         }
 
         .input-group .field label {
-            font-size: 11px;
+            font-size: 10px;
             color: rgba(44, 42, 40, 0.3);
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
         }
@@ -230,9 +225,9 @@
             width: 100%;
             background: rgba(255, 255, 255, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 18px;
-            padding: 14px 16px;
-            font-size: 16px;
+            border-radius: 16px;
+            padding: 12px 14px;
+            font-size: 15px;
             font-weight: 500;
             color: #2c2a28;
             outline: none;
@@ -243,55 +238,50 @@
         .input-group .field input:focus {
             border-color: #b8a99a;
             background: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 0 0 4px rgba(184, 169, 154, 0.15);
+            box-shadow: 0 0 0 3px rgba(184, 169, 154, 0.12);
         }
 
+        /* --- КНОПКИ --- */
         .btn {
             width: 100%;
-            padding: 16px 20px;
+            padding: 14px 18px;
             border: none;
-            border-radius: 22px;
-            font-size: 17px;
+            border-radius: 20px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .btn-primary {
             background: rgba(44, 42, 40, 0.85);
             color: #f5f0ea;
-            box-shadow: 0 4px 16px rgba(44, 42, 40, 0.08);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 14px rgba(44, 42, 40, 0.06);
         }
-
         .btn-primary:active {
             transform: scale(0.96);
             background: rgba(44, 42, 40, 0.95);
         }
 
         .btn-danger {
-            background: rgba(200, 80, 80, 0.85);
+            background: rgba(200, 80, 80, 0.8);
             color: #fff;
-            box-shadow: 0 4px 16px rgba(200, 80, 80, 0.15);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 14px rgba(200, 80, 80, 0.12);
         }
-
         .btn-danger:active {
             transform: scale(0.96);
-            background: rgba(200, 80, 80, 0.95);
+            background: rgba(200, 80, 80, 0.9);
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.6);
             color: #2c2a28;
-            backdrop-filter: blur(10px);
         }
-
         .btn-secondary:active {
             background: rgba(255, 255, 255, 0.6);
             transform: scale(0.97);
@@ -300,21 +290,20 @@
         .btn-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
-
         .btn-group-row {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
-
         .btn-group-row .btn {
             flex: 1;
         }
 
+        /* --- API ROW --- */
         .api-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
         }
 
@@ -322,9 +311,9 @@
             flex: 1;
             background: rgba(255, 255, 255, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 18px;
-            padding: 12px 16px;
-            font-size: 14px;
+            border-radius: 16px;
+            padding: 10px 14px;
+            font-size: 13px;
             color: #2c2a28;
             outline: none;
             backdrop-filter: blur(10px);
@@ -336,15 +325,15 @@
         }
 
         .api-row .btn-small {
-            padding: 12px 20px;
-            border-radius: 18px;
+            padding: 10px 18px;
+            border-radius: 16px;
             border: none;
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             color: #2c2a28;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             white-space: nowrap;
         }
@@ -353,16 +342,15 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
+        /* --- СИГНАЛЫ --- */
         .signal-card {
             border-left: 3px solid #b8a99a;
             padding-left: 14px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
-
         .signal-card.shot {
             border-left-color: #c9a8a8;
         }
-
         .signal-card.long {
             border-left-color: #a8c9b0;
         }
@@ -372,29 +360,25 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .signal-card .row .symbol {
             font-weight: 700;
-            font-size: 18px;
+            font-size: 17px;
             color: #2c2a28;
         }
-
         .signal-card .row .side {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            padding: 3px 14px;
+            padding: 2px 12px;
             border-radius: 40px;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            letter-spacing: 0.3px;
             background: rgba(44, 42, 40, 0.06);
             color: rgba(44, 42, 40, 0.6);
         }
-
         .signal-card .row .side.shot {
             background: rgba(201, 168, 168, 0.15);
             color: #9a7a7a;
         }
-
         .signal-card .row .side.long {
             background: rgba(168, 201, 176, 0.15);
             color: #5a8a6a;
@@ -403,12 +387,11 @@
         .signal-card .meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px 14px;
-            font-size: 13px;
+            gap: 4px 12px;
+            font-size: 12px;
             color: rgba(44, 42, 40, 0.4);
-            margin-top: 8px;
+            margin-top: 6px;
         }
-
         .signal-card .meta .highlight {
             color: #2c2a28;
             font-weight: 500;
@@ -416,24 +399,21 @@
 
         .signal-card .badge {
             display: inline-block;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             padding: 2px 10px;
             border-radius: 20px;
             background: rgba(44, 42, 40, 0.06);
             color: rgba(44, 42, 40, 0.5);
         }
-
         .signal-card .badge.green {
             background: rgba(125, 155, 122, 0.15);
             color: #5a8a6a;
         }
-
         .signal-card .badge.orange {
             background: rgba(200, 160, 100, 0.15);
             color: #b08a4a;
         }
-
         .signal-card .badge.red {
             background: rgba(200, 120, 120, 0.15);
             color: #9a5a5a;
@@ -443,21 +423,21 @@
             text-align: center;
             font-size: 14px;
             color: rgba(44, 42, 40, 0.25);
-            padding: 20px 0;
+            padding: 16px 0 8px;
             letter-spacing: 0.3px;
         }
 
         .fade-in {
-            animation: fadeUp 0.6s ease both;
+            animation: fadeUp 0.5s ease both;
         }
-        .fade-in-d1 { animation-delay: 0.05s; }
-        .fade-in-d2 { animation-delay: 0.1s; }
-        .fade-in-d3 { animation-delay: 0.15s; }
+        .fade-in-d1 { animation-delay: 0.04s; }
+        .fade-in-d2 { animation-delay: 0.08s; }
+        .fade-in-d3 { animation-delay: 0.12s; }
 
         @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(16px) scale(0.97);
+                transform: translateY(14px) scale(0.97);
             }
             to {
                 opacity: 1;
@@ -465,18 +445,19 @@
             }
         }
 
-        .mt-1 { margin-top: 8px; }
-        .flex { display: flex; align-items: center; gap: 8px; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .mt-1 { margin-top: 6px; }
+        .flex { display: flex; align-items: center; gap: 6px; }
         .gap-1 { gap: 6px; }
         ::-webkit-scrollbar { width: 0; }
 
-        /* --- АДАПТИВ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ --- */
+        /* --- МАЛЕНЬКИЕ ЭКРАНЫ --- */
         @media (max-width: 380px) {
             .header h1 { font-size: 20px; }
             .status-badge { font-size: 11px; padding: 4px 12px; }
             .scan-status .main-text { font-size: 14px; }
             .scan-status .sub-text { font-size: 12px; }
+            .glass { padding: 14px 14px; }
+            .btn { font-size: 15px; padding: 12px 16px; }
         }
     </style>
 </head>
@@ -539,7 +520,7 @@
     <!-- КНОПКИ -->
     <div class="btn-group fade-in fade-in-d3">
         <button class="btn btn-primary" onclick="runScanner()">🚀 Запустить сканер</button>
-        <button class="btn btn-danger" onclick="stopScanner()" id="stopBtn" style="display:none;">⏹ Остановить сканер</button>
+        <button class="btn btn-danger" onclick="stopScanner()" id="stopBtn" style="display:none;">⏹ Остановить</button>
         <div class="btn-group-row">
             <button class="btn btn-secondary" onclick="loadHistory()">📜 История</button>
             <button class="btn btn-secondary" onclick="clearSignals()">🗑️ Очистить</button>
@@ -551,7 +532,7 @@
         <div class="status-text">📭 Нет сигналов</div>
     </div>
 
-    <div class="status-text" id="statusMessage" style="font-size:13px;"></div>
+    <div class="status-text" id="statusMessage" style="font-size:12px; padding-top: 4px;"></div>
 
 </div>
 
@@ -580,7 +561,6 @@
         }
     }
 
-    // ---- УПРАВЛЕНИЕ СОСТОЯНИЕМ ИНТЕРФЕЙСА ----
     function setAppState(state, data) {
         const body = document.body;
         const badge = document.getElementById('statusBadge');
@@ -590,7 +570,6 @@
         const progress = document.getElementById('progressFill');
         const stopBtn = document.getElementById('stopBtn');
 
-        // Сбрасываем классы
         body.className = '';
         badge.className = 'status-badge';
 
@@ -600,13 +579,12 @@
                 badge.classList.add('scanning');
                 badge.textContent = '🔍 Анализ...';
                 spinner.classList.remove('hidden');
-                const pct = data && data.total > 0 ? Math.round((data.checked / data.total) * 100) : 0;
+                const pct = data?.total > 0 ? Math.round((data.checked / data.total) * 100) : 0;
                 progress.style.width = pct + '%';
                 mainStatus.innerHTML = `<span class="highlight">🔍</span> Сканер запущен`;
-                subStatus.textContent = data && data.current_symbol ? `Проверяется: ${data.current_symbol} (${data.checked || 0} / ${data.total || 0})` : `Анализ... (${data?.checked || 0} / ${data?.total || 0})`;
+                subStatus.textContent = data?.current_symbol ? `${data.current_symbol} (${data.checked || 0}/${data.total || 0})` : `Анализ... (${data?.checked || 0}/${data?.total || 0})`;
                 stopBtn.style.display = 'block';
                 break;
-
             case 'done':
                 body.classList.add('state-done');
                 badge.classList.add('done');
@@ -614,21 +592,19 @@
                 spinner.classList.add('hidden');
                 progress.style.width = '100%';
                 mainStatus.innerHTML = `<span class="highlight">✅</span> Анализ завершён`;
-                subStatus.textContent = data ? `Проверено ${data.total || 0} монет` : 'Готово';
+                subStatus.textContent = data ? `Проверено ${data.total || 0} монет` : '';
                 stopBtn.style.display = 'none';
                 break;
-
             case 'stopped':
                 body.classList.add('state-stopped');
                 badge.classList.add('stopped');
                 badge.textContent = '⏹ Остановлен';
                 spinner.classList.add('hidden');
                 progress.style.width = '0%';
-                mainStatus.innerHTML = `<span class="highlight">⏹</span> Остановлен пользователем`;
+                mainStatus.innerHTML = `<span class="highlight">⏹</span> Остановлен`;
                 subStatus.textContent = '';
                 stopBtn.style.display = 'none';
                 break;
-
             case 'error':
                 body.classList.add('state-error');
                 badge.classList.add('error');
@@ -638,8 +614,7 @@
                 subStatus.textContent = '';
                 stopBtn.style.display = 'none';
                 break;
-
-            default: // idle
+            default:
                 body.className = '';
                 badge.className = 'status-badge';
                 badge.textContent = '● Ожидание';
@@ -652,7 +627,6 @@
         }
     }
 
-    // ---- СТАТУС СКАНЕРА ----
     async function updateStatusUI() {
         const apiUrl = getApiUrl();
         try {
@@ -660,20 +634,12 @@
             if (!resp.ok) return;
             const data = await resp.json();
 
-            if (data.status === 'scanning') {
-                setAppState('scanning', data);
-            } else if (data.status === 'done') {
-                setAppState('done', data);
-            } else if (data.status === 'stopped') {
-                setAppState('stopped');
-            } else if (data.status === 'error') {
-                setAppState('error', data);
-            } else {
-                setAppState('idle');
-            }
-        } catch (e) {
-            // при ошибке соединения оставляем текущее состояние
-        }
+            if (data.status === 'scanning') setAppState('scanning', data);
+            else if (data.status === 'done') setAppState('done', data);
+            else if (data.status === 'stopped') setAppState('stopped');
+            else if (data.status === 'error') setAppState('error', data);
+            else setAppState('idle');
+        } catch (e) {}
     }
 
     async function startStatusPolling() {
@@ -682,28 +648,19 @@
         statusInterval = setInterval(updateStatusUI, 2000);
     }
 
-    // ---- ОСТАНОВКА СКАНЕРА ----
     async function stopScanner() {
         const apiUrl = getApiUrl();
         document.getElementById('statusMessage').innerText = '⏳ Остановка...';
         try {
-            const resp = await fetch(apiUrl + '/stop_scanner', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            });
+            const resp = await fetch(apiUrl + '/stop_scanner', { method: 'POST', headers: { 'Content-Type': 'application/json' } });
             const data = await resp.json();
-            if (data.status === 'stop_requested') {
-                document.getElementById('statusMessage').innerText = '⏹ Сканер остановлен';
-            } else {
-                document.getElementById('statusMessage').innerText = 'ℹ️ Сканер не запущен';
-            }
+            document.getElementById('statusMessage').innerText = data.status === 'stop_requested' ? '⏹ Остановлен' : 'ℹ️ Не запущен';
             await updateStatusUI();
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ Ошибка: ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
         }
     }
 
-    // ---- ЗАГРУЗКА НАСТРОЕК ----
     async function loadSettings() {
         const apiUrl = getApiUrl();
         try {
@@ -715,11 +672,10 @@
             if (data.risk_reward) document.getElementById('riskReward').value = data.risk_reward;
             document.getElementById('statusMessage').innerText = '✅ Настройки загружены';
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ Ошибка загрузки: ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
         }
     }
 
-    // ---- СОХРАНЕНИЕ НАСТРОЕК ----
     async function saveSettings() {
         const apiUrl = getApiUrl();
         const settings = {
@@ -736,14 +692,13 @@
             if (!resp.ok) throw new Error('Ошибка сохранения');
             document.getElementById('statusMessage').innerText = '✅ Настройки сохранены!';
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ Ошибка сохранения: ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
         }
     }
 
-    // ---- ЗАПУСК СКАНЕРА ----
     async function runScanner() {
         const apiUrl = getApiUrl();
-        document.getElementById('statusMessage').innerText = '⏳ Запуск сканера...';
+        document.getElementById('statusMessage').innerText = '⏳ Запуск...';
         try {
             const resp = await fetch(apiUrl + '/run_scanner', {
                 method: 'POST',
@@ -751,17 +706,16 @@
                 body: JSON.stringify({ chat_id: 1907661832 })
             });
             if (!resp.ok) throw new Error('Ошибка запуска');
-            document.getElementById('statusMessage').innerText = '✅ Сканер запущен. Смотрите прогресс!';
+            document.getElementById('statusMessage').innerText = '✅ Запущен';
             startStatusPolling();
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ Ошибка: ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
         }
     }
 
-    // ---- ИСТОРИЯ ----
     async function loadHistory() {
         const apiUrl = getApiUrl();
-        document.getElementById('statusMessage').innerText = '⏳ Загрузка истории...';
+        document.getElementById('statusMessage').innerText = '⏳ История...';
         try {
             const resp = await fetch(apiUrl + '/history');
             if (!resp.ok) throw new Error('Ошибка загрузки');
@@ -772,20 +726,19 @@
                 return;
             }
             displaySignals(data);
-            document.getElementById('statusMessage').innerText = `📜 Показано ${data.length} сигналов (за 7 дней)`;
+            document.getElementById('statusMessage').innerText = `📜 ${data.length} сигналов`;
         } catch (e) {
-            document.getElementById('statusMessage').innerText = '❌ Ошибка: ' + e.message;
+            document.getElementById('statusMessage').innerText = '❌ ' + e.message;
         }
     }
 
     function clearSignals() {
-        if (confirm('Очистить список сигналов?')) {
+        if (confirm('Очистить список?')) {
             displaySignals([]);
-            document.getElementById('statusMessage').innerText = '🗑️ Список очищен';
+            document.getElementById('statusMessage').innerText = '🗑️ Очищено';
         }
     }
 
-    // ---- ОТОБРАЖЕНИЕ СИГНАЛОВ ----
     function displaySignals(signals) {
         const container = document.getElementById('signalsContainer');
         if (!signals || signals.length === 0) {
@@ -796,12 +749,11 @@
         signals.forEach((s, i) => {
             const sideClass = s.side && s.side.includes('LONG') ? 'long' : 'shot';
             const sideLabel = s.side || '—';
-            const delay = i * 0.06;
-
-            let statusBadge = '';
-            if (s.atr_status === '🟢') statusBadge = '<span class="badge green">🔋 Много энергии</span>';
-            else if (s.atr_status === '🟠') statusBadge = '<span class="badge orange">⚡ Средний запас</span>';
-            else if (s.atr_status === '🔴') statusBadge = '<span class="badge red">🪫 Мало энергии</span>';
+            const delay = i * 0.05;
+            let badge = '';
+            if (s.atr_status === '🟢') badge = '<span class="badge green">🔋 Много энергии</span>';
+            else if (s.atr_status === '🟠') badge = '<span class="badge orange">⚡ Средний запас</span>';
+            else if (s.atr_status === '🔴') badge = '<span class="badge red">🪫 Мало энергии</span>';
 
             html += `
                 <div class="glass signal-card ${sideClass} fade-in" style="animation-delay: ${delay}s;">
@@ -821,12 +773,12 @@
                     </div>
                     <div class="meta">
                         <span>📐 ${s.risk_reward || '—'}</span>
-                        <span>🔁 Касаний: <span class="highlight">${s.touches || 0}</span></span>
+                        <span>🔁 ${s.touches || 0}</span>
                     </div>
                     <div class="meta">
-                        <span>📊 ATR: <span class="highlight">${s.atr_used || '—'}</span></span>
-                        <span>⏳ Запас: ${s.atr_consumed || 0}%</span>
-                        ${statusBadge}
+                        <span>📊 ${s.atr_used || '—'}</span>
+                        <span>⏳ ${s.atr_consumed || 0}%</span>
+                        ${badge}
                     </div>
                     <div class="meta">
                         <span>💵 ${s.daily_volume_usd || '—'}M</span>
@@ -838,24 +790,19 @@
         container.innerHTML = html;
     }
 
-    // ---- ПРИЁМ ДАННЫХ ОТ БОТА ----
     window.Telegram.WebApp.onEvent('data', (data) => {
         try {
             const parsed = JSON.parse(data);
             if (parsed.type === 'signals') {
                 displaySignals(parsed.data);
-                document.getElementById('statusMessage').innerText = `✅ Получено ${parsed.data.length} сигналов`;
+                document.getElementById('statusMessage').innerText = `✅ ${parsed.data.length} сигналов`;
             }
-        } catch (e) {
-            console.error('Ошибка данных от бота:', e);
-        }
+        } catch (e) {}
     });
 
-    // ---- ИНИЦИАЛИЗАЦИЯ ----
     loadSettings();
     startStatusPolling();
 
-    // ДЕМО-СИГНАЛЫ
     setTimeout(() => {
         const demo = [
             { symbol: 'BTCUSDT', side: 'SHORT (ОТБОЙ R1)', current_price: '61234.56', entry: '61200.00', stop: '61300.00', tp: '61100.00', daily_volume_usd: '450.2', signal_type: 'BOUNCE', level: '61250.00', risk_reward: '1:3.0', touches: 3, atr_used: '850.5', atr_consumed: '45.2', atr_status: '🟢', time: '2026-08-06 14:30' },
