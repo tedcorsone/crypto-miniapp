@@ -21,6 +21,23 @@
             background: linear-gradient(145deg, #e8e0d5 0%, #d6cdc0 100%);
             color: #2c2a28;
             position: relative;
+            transition: background 0.8s ease;
+        }
+
+        body.state-scanning {
+            background: linear-gradient(145deg, #f5e6c8 0%, #e8d5a8 100%);
+        }
+
+        body.state-done {
+            background: linear-gradient(145deg, #d4e8d4 0%, #b8d4b8 100%);
+        }
+
+        body.state-stopped {
+            background: linear-gradient(145deg, #f0d4d4 0%, #e0b8b8 100%);
+        }
+
+        body.state-error {
+            background: linear-gradient(145deg, #f0d0d0 0%, #e0b0b0 100%);
         }
 
         .glass-layer {
@@ -33,6 +50,7 @@
             z-index: 0;
             background: radial-gradient(circle at 20% 20%, rgba(255, 245, 235, 0.2), transparent 60%),
                         radial-gradient(circle at 80% 80%, rgba(235, 225, 215, 0.15), transparent 50%);
+            transition: opacity 0.8s ease;
         }
 
         .container {
@@ -60,11 +78,12 @@
             transform: scale(0.98);
         }
 
+        /* --- HEADER С БАДЖЕМ --- */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             padding: 0 4px;
         }
 
@@ -75,27 +94,105 @@
             letter-spacing: -0.5px;
         }
 
-        .header .status {
+        .status-badge {
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 40px;
+            background: rgba(44, 42, 40, 0.06);
             color: rgba(44, 42, 40, 0.5);
+            transition: all 0.4s ease;
+            white-space: nowrap;
+        }
+
+        .status-badge.scanning {
+            background: rgba(200, 160, 60, 0.2);
+            color: #8a7a3a;
+            animation: pulseBadge 1.2s infinite;
+        }
+
+        .status-badge.done {
+            background: rgba(80, 160, 80, 0.2);
+            color: #3a7a3a;
+        }
+
+        .status-badge.stopped {
+            background: rgba(200, 80, 80, 0.2);
+            color: #8a3a3a;
+        }
+
+        .status-badge.error {
+            background: rgba(200, 60, 60, 0.2);
+            color: #8a2a2a;
+        }
+
+        @keyframes pulseBadge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* --- СТАТУС СКАНЕРА (ГЛАВНЫЙ) --- */
+        .scan-status {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .scan-status .main-row {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
 
-        .header .status .dot {
-            width: 8px;
-            height: 8px;
-            background: #7d9b7a;
+        .scan-status .spinner {
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(44, 42, 40, 0.1);
+            border-top-color: #2c2a28;
             border-radius: 50%;
-            display: inline-block;
-            animation: pulseDot 2s infinite;
+            animation: spin 0.8s linear infinite;
+            flex-shrink: 0;
         }
 
-        @keyframes pulseDot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.3; transform: scale(0.8); }
+        .scan-status .spinner.hidden {
+            display: none;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .scan-status .main-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #2c2a28;
+        }
+
+        .scan-status .main-text .highlight {
+            font-weight: 600;
+        }
+
+        .scan-status .sub-text {
+            font-size: 14px;
+            color: rgba(44, 42, 40, 0.5);
+            margin-left: 34px;
+        }
+
+        .scan-status .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(44, 42, 40, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-left: 34px;
+        }
+
+        .scan-status .progress-bar .fill {
+            height: 100%;
+            background: #2c2a28;
+            border-radius: 4px;
+            transition: width 0.4s ease;
+            width: 0%;
         }
 
         .label {
@@ -256,62 +353,6 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
-        /* --- СТАТУС СКАНЕРА --- */
-        .scan-status {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .scan-status .row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .scan-status .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(44, 42, 40, 0.1);
-            border-top-color: #2c2a28;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        .scan-status .spinner.hidden {
-            display: none;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .scan-status .info {
-            font-size: 14px;
-            color: rgba(44, 42, 40, 0.5);
-        }
-
-        .scan-status .info .highlight {
-            color: #2c2a28;
-            font-weight: 500;
-        }
-
-        .scan-status .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(44, 42, 40, 0.1);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .scan-status .progress-bar .fill {
-            height: 100%;
-            background: #2c2a28;
-            border-radius: 4px;
-            transition: width 0.3s ease;
-            width: 0%;
-        }
-
         .signal-card {
             border-left: 3px solid #b8a99a;
             padding-left: 14px;
@@ -429,6 +470,14 @@
         .flex-between { display: flex; justify-content: space-between; align-items: center; }
         .gap-1 { gap: 6px; }
         ::-webkit-scrollbar { width: 0; }
+
+        /* --- АДАПТИВ ДЛЯ МАЛЕНЬКИХ ЭКРАНОВ --- */
+        @media (max-width: 380px) {
+            .header h1 { font-size: 20px; }
+            .status-badge { font-size: 11px; padding: 4px 12px; }
+            .scan-status .main-text { font-size: 14px; }
+            .scan-status .sub-text { font-size: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -437,13 +486,29 @@
 
 <div class="container">
 
+    <!-- HEADER -->
     <div class="header fade-in">
         <h1>✦ CryptoSky</h1>
-        <div class="status">
-            <span class="dot"></span> Активен
+        <span id="statusBadge" class="status-badge">● Ожидание</span>
+    </div>
+
+    <!-- СТАТУС СКАНЕРА (ВСЕГДА ВВЕРХУ) -->
+    <div class="glass fade-in fade-in-d1" id="statusCard">
+        <div class="scan-status">
+            <div class="main-row">
+                <div class="spinner hidden" id="spinner"></div>
+                <div class="main-text" id="mainStatus">
+                    <span class="highlight">⏳</span> Ожидание запуска
+                </div>
+            </div>
+            <div class="sub-text" id="subStatus"></div>
+            <div class="progress-bar">
+                <div class="fill" id="progressFill" style="width:0%;"></div>
+            </div>
         </div>
     </div>
 
+    <!-- API URL -->
     <div class="glass fade-in fade-in-d1">
         <div class="api-row">
             <input type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
@@ -451,21 +516,7 @@
         </div>
     </div>
 
-    <!-- СТАТУС СКАНЕРА -->
-    <div class="glass fade-in fade-in-d1" id="statusCard">
-        <div class="scan-status">
-            <div class="row">
-                <div class="spinner hidden" id="spinner"></div>
-                <div class="info" id="statusInfo">
-                    <span class="highlight">⏳</span> Ожидание запуска
-                </div>
-            </div>
-            <div class="progress-bar">
-                <div class="fill" id="progressFill" style="width:0%;"></div>
-            </div>
-        </div>
-    </div>
-
+    <!-- НАСТРОЙКИ -->
     <div class="glass fade-in fade-in-d2">
         <span class="label">⚙️ Параметры</span>
         <div class="input-group">
@@ -485,15 +536,17 @@
         <button class="btn btn-secondary mt-1" onclick="saveSettings()">💾 Сохранить</button>
     </div>
 
+    <!-- КНОПКИ -->
     <div class="btn-group fade-in fade-in-d3">
         <button class="btn btn-primary" onclick="runScanner()">🚀 Запустить сканер</button>
-        <button class="btn btn-danger" onclick="stopScanner()" id="stopBtn">⏹ Остановить сканер</button>
+        <button class="btn btn-danger" onclick="stopScanner()" id="stopBtn" style="display:none;">⏹ Остановить сканер</button>
         <div class="btn-group-row">
             <button class="btn btn-secondary" onclick="loadHistory()">📜 История</button>
             <button class="btn btn-secondary" onclick="clearSignals()">🗑️ Очистить</button>
         </div>
     </div>
 
+    <!-- СИГНАЛЫ -->
     <div id="signalsContainer">
         <div class="status-text">📭 Нет сигналов</div>
     </div>
@@ -527,6 +580,78 @@
         }
     }
 
+    // ---- УПРАВЛЕНИЕ СОСТОЯНИЕМ ИНТЕРФЕЙСА ----
+    function setAppState(state, data) {
+        const body = document.body;
+        const badge = document.getElementById('statusBadge');
+        const mainStatus = document.getElementById('mainStatus');
+        const subStatus = document.getElementById('subStatus');
+        const spinner = document.getElementById('spinner');
+        const progress = document.getElementById('progressFill');
+        const stopBtn = document.getElementById('stopBtn');
+
+        // Сбрасываем классы
+        body.className = '';
+        badge.className = 'status-badge';
+
+        switch (state) {
+            case 'scanning':
+                body.classList.add('state-scanning');
+                badge.classList.add('scanning');
+                badge.textContent = '🔍 Анализ...';
+                spinner.classList.remove('hidden');
+                const pct = data && data.total > 0 ? Math.round((data.checked / data.total) * 100) : 0;
+                progress.style.width = pct + '%';
+                mainStatus.innerHTML = `<span class="highlight">🔍</span> Сканер запущен`;
+                subStatus.textContent = data && data.current_symbol ? `Проверяется: ${data.current_symbol} (${data.checked || 0} / ${data.total || 0})` : `Анализ... (${data?.checked || 0} / ${data?.total || 0})`;
+                stopBtn.style.display = 'block';
+                break;
+
+            case 'done':
+                body.classList.add('state-done');
+                badge.classList.add('done');
+                badge.textContent = '✅ Завершён';
+                spinner.classList.add('hidden');
+                progress.style.width = '100%';
+                mainStatus.innerHTML = `<span class="highlight">✅</span> Анализ завершён`;
+                subStatus.textContent = data ? `Проверено ${data.total || 0} монет` : 'Готово';
+                stopBtn.style.display = 'none';
+                break;
+
+            case 'stopped':
+                body.classList.add('state-stopped');
+                badge.classList.add('stopped');
+                badge.textContent = '⏹ Остановлен';
+                spinner.classList.add('hidden');
+                progress.style.width = '0%';
+                mainStatus.innerHTML = `<span class="highlight">⏹</span> Остановлен пользователем`;
+                subStatus.textContent = '';
+                stopBtn.style.display = 'none';
+                break;
+
+            case 'error':
+                body.classList.add('state-error');
+                badge.classList.add('error');
+                badge.textContent = '❌ Ошибка';
+                spinner.classList.add('hidden');
+                mainStatus.innerHTML = `<span class="highlight">❌</span> ${data?.current_symbol || 'Ошибка'}`;
+                subStatus.textContent = '';
+                stopBtn.style.display = 'none';
+                break;
+
+            default: // idle
+                body.className = '';
+                badge.className = 'status-badge';
+                badge.textContent = '● Ожидание';
+                spinner.classList.add('hidden');
+                progress.style.width = '0%';
+                mainStatus.innerHTML = `<span class="highlight">⏳</span> Ожидание запуска`;
+                subStatus.textContent = '';
+                stopBtn.style.display = 'none';
+                break;
+        }
+    }
+
     // ---- СТАТУС СКАНЕРА ----
     async function updateStatusUI() {
         const apiUrl = getApiUrl();
@@ -535,39 +660,19 @@
             if (!resp.ok) return;
             const data = await resp.json();
 
-            const spinner = document.getElementById('spinner');
-            const info = document.getElementById('statusInfo');
-            const progress = document.getElementById('progressFill');
-            const stopBtn = document.getElementById('stopBtn');
-
             if (data.status === 'scanning') {
-                spinner.classList.remove('hidden');
-                const pct = data.total > 0 ? Math.round((data.checked / data.total) * 100) : 0;
-                progress.style.width = pct + '%';
-                info.innerHTML = `<span class="highlight">🔍</span> Анализ: ${data.checked} / ${data.total} монет (${data.current_symbol || ''})`;
-                stopBtn.style.display = 'block';
+                setAppState('scanning', data);
             } else if (data.status === 'done') {
-                spinner.classList.add('hidden');
-                progress.style.width = '100%';
-                info.innerHTML = `<span class="highlight">✅</span> Анализ завершён (${data.total} монет)`;
-                stopBtn.style.display = 'none';
+                setAppState('done', data);
             } else if (data.status === 'stopped') {
-                spinner.classList.add('hidden');
-                progress.style.width = '0%';
-                info.innerHTML = `<span class="highlight">⏹</span> Остановлен пользователем`;
-                stopBtn.style.display = 'none';
+                setAppState('stopped');
             } else if (data.status === 'error') {
-                spinner.classList.add('hidden');
-                info.innerHTML = `<span class="highlight">❌</span> ${data.current_symbol || 'Ошибка'}`;
-                stopBtn.style.display = 'none';
+                setAppState('error', data);
             } else {
-                spinner.classList.add('hidden');
-                progress.style.width = '0%';
-                info.innerHTML = `<span class="highlight">⏳</span> Ожидание запуска`;
-                stopBtn.style.display = 'none';
+                setAppState('idle');
             }
         } catch (e) {
-            // игнорируем ошибки
+            // при ошибке соединения оставляем текущее состояние
         }
     }
 
