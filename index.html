@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CryptoSky · Graphite</title>
+    <title>CryptoSky · iOS Glass</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -21,10 +21,10 @@
             color: #1e1e1e;
             position: relative;
             overflow-x: hidden;
-            background: #d5d5d5;
+            background: #c8c8c8;
         }
 
-        /* --- АНИМИРОВАННЫЙ ГРАФИТОВЫЙ ФОН --- */
+        /* --- ТЁМНАЯ АНИМАЦИЯ (графит + дымка) --- */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -32,7 +32,7 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            background: linear-gradient(-45deg, #d5d5d5, #c8c8c8, #d0d0d0, #bfbfbf);
+            background: linear-gradient(-45deg, #b8b8b8, #a8a8a8, #b0b0b0, #9a9a9a);
             background-size: 400% 400%;
             animation: gradientShift 20s ease infinite;
         }
@@ -43,7 +43,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* --- ПУЗЫРЬКИ (мягкие) --- */
+        /* --- ТЁМНЫЕ ПУЗЫРЬКИ (дымка) --- */
         .bubbles {
             position: fixed;
             top: 0;
@@ -58,7 +58,7 @@
         .bubble {
             position: absolute;
             bottom: -60px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(50, 50, 50, 0.12);
             border-radius: 50%;
             animation: floatUp linear infinite;
         }
@@ -72,18 +72,17 @@
         .bubble:nth-child(7) { left: 92%; width: 100px; height: 100px; animation-duration: 28s; animation-delay: 6s; }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) scale(0.8); opacity: 0.5; }
+            0% { transform: translateY(0) scale(0.8); opacity: 0.4; }
             100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- МЕРЦАНИЕ --- */
         .glow {
             position: fixed;
             top: -30%;
             left: -20%;
             width: 70%;
             height: 70%;
-            background: radial-gradient(circle, rgba(180, 180, 180, 0.08), transparent 70%);
+            background: radial-gradient(circle, rgba(120, 120, 120, 0.10), transparent 70%);
             border-radius: 50%;
             z-index: 0;
             animation: glowPulse 8s ease-in-out infinite;
@@ -96,7 +95,7 @@
             right: -10%;
             width: 60%;
             height: 60%;
-            background: radial-gradient(circle, rgba(160, 160, 160, 0.06), transparent 70%);
+            background: radial-gradient(circle, rgba(100, 100, 100, 0.08), transparent 70%);
             border-radius: 50%;
             z-index: 0;
             animation: glowPulse 10s ease-in-out infinite reverse;
@@ -104,8 +103,8 @@
         }
 
         @keyframes glowPulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.3); opacity: 1; }
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(1.3); opacity: 0.9; }
         }
 
         .container {
@@ -116,22 +115,22 @@
             width: 100%;
         }
 
-        /* --- СТЕКЛО (графит) --- */
+        /* --- СТЕКЛО (как в iOS 27) --- */
         .glass {
-            background: rgba(235, 235, 235, 0.5);
-            backdrop-filter: blur(40px) saturate(1.2);
-            -webkit-backdrop-filter: blur(40px) saturate(1.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(60px) saturate(1.4);
+            -webkit-backdrop-filter: blur(60px) saturate(1.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 32px;
             padding: 20px 18px;
             margin-bottom: 16px;
-            box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.06),
-                        0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
+            box-shadow: 0 12px 50px -8px rgba(0, 0, 0, 0.05),
+                        0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .glass:active {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
         .header {
@@ -196,7 +195,7 @@
 
         .input-group .field label {
             font-size: 11px;
-            color: rgba(30, 30, 30, 0.3);
+            color: rgba(30, 30, 30, 0.35);
             display: block;
             margin-bottom: 4px;
             text-transform: uppercase;
@@ -205,8 +204,8 @@
 
         .input-group .field input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(200, 200, 200, 0.6);
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 18px;
             padding: 14px 16px;
             font-size: 16px;
@@ -214,15 +213,16 @@
             color: #1e1e1e;
             outline: none;
             transition: 0.25s ease;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
         }
 
         .input-group .field input:focus {
-            border-color: #b0b0b0;
-            background: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 0 0 4px rgba(176, 176, 176, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
         }
 
+        /* --- СТЕКЛЯННЫЕ КНОПКИ (прозрачнее, как в iOS 27) --- */
         .btn {
             width: 100%;
             padding: 16px 20px;
@@ -236,29 +236,30 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .btn-primary {
-            background: rgba(30, 30, 30, 0.85);
-            color: #f0f0f0;
-            box-shadow: 0 4px 16px rgba(30, 30, 30, 0.08);
-            backdrop-filter: blur(10px);
+            background: rgba(30, 30, 30, 0.15);
+            color: #1e1e1e;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
         }
 
         .btn-primary:active {
             transform: scale(0.96);
-            background: rgba(30, 30, 30, 0.95);
+            background: rgba(30, 30, 30, 0.25);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: #1e1e1e;
-            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:active {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.12);
             transform: scale(0.97);
         }
 
@@ -277,59 +278,18 @@
             flex: 1;
         }
 
-        .api-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .api-row input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(200, 200, 200, 0.5);
-            border-radius: 18px;
-            padding: 12px 16px;
-            font-size: 14px;
-            color: #1e1e1e;
-            outline: none;
-            backdrop-filter: blur(10px);
-        }
-
-        .api-row input:focus {
-            border-color: #b0b0b0;
-            background: rgba(255, 255, 255, 0.6);
-        }
-
-        .api-row .btn-small {
-            padding: 12px 20px;
-            border-radius: 18px;
-            border: none;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(200, 200, 200, 0.4);
-            color: #1e1e1e;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .api-row .btn-small:active {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
         .signal-card {
-            border-left: 3px solid #b0b0b0;
+            border-left: 3px solid rgba(30, 30, 30, 0.2);
             padding-left: 14px;
             margin-bottom: 14px;
         }
 
         .signal-card.shot {
-            border-left-color: #c9a8a8;
+            border-left-color: rgba(180, 100, 100, 0.4);
         }
 
         .signal-card.long {
-            border-left-color: #a8c9b0;
+            border-left-color: rgba(100, 180, 120, 0.4);
         }
 
         .signal-card .row {
@@ -351,18 +311,18 @@
             border-radius: 40px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            background: rgba(30, 30, 30, 0.06);
+            background: rgba(30, 30, 30, 0.05);
             color: rgba(30, 30, 30, 0.6);
         }
 
         .signal-card .row .side.shot {
-            background: rgba(201, 168, 168, 0.15);
-            color: #9a7a7a;
+            background: rgba(180, 100, 100, 0.10);
+            color: #8a5a5a;
         }
 
         .signal-card .row .side.long {
-            background: rgba(168, 201, 176, 0.15);
-            color: #5a8a6a;
+            background: rgba(100, 180, 120, 0.10);
+            color: #4a7a5a;
         }
 
         .signal-card .meta {
@@ -385,29 +345,29 @@
             font-weight: 600;
             padding: 2px 10px;
             border-radius: 20px;
-            background: rgba(30, 30, 30, 0.06);
+            background: rgba(30, 30, 30, 0.04);
             color: rgba(30, 30, 30, 0.5);
         }
 
         .signal-card .badge.green {
-            background: rgba(125, 155, 122, 0.15);
-            color: #5a8a6a;
+            background: rgba(100, 180, 120, 0.10);
+            color: #4a7a5a;
         }
 
         .signal-card .badge.orange {
-            background: rgba(200, 160, 100, 0.15);
-            color: #b08a4a;
+            background: rgba(200, 160, 100, 0.10);
+            color: #8a7a4a;
         }
 
         .signal-card .badge.red {
-            background: rgba(200, 120, 120, 0.15);
-            color: #9a5a5a;
+            background: rgba(180, 100, 100, 0.10);
+            color: #8a5a5a;
         }
 
         .status-text {
             text-align: center;
             font-size: 14px;
-            color: rgba(30, 30, 30, 0.25);
+            color: rgba(30, 30, 30, 0.2);
             padding: 20px 0;
             letter-spacing: 0.3px;
         }
@@ -439,14 +399,9 @@
 </head>
 <body>
 
-<!-- АНИМИРОВАННЫЙ ГРАФИТОВЫЙ ФОН -->
 <div class="animated-bg"></div>
-
-<!-- МЕРЦАНИЕ -->
 <div class="glow"></div>
 <div class="glow2"></div>
-
-<!-- ПУЗЫРЬКИ -->
 <div class="bubbles">
     <div class="bubble"></div>
     <div class="bubble"></div>
@@ -458,7 +413,6 @@
 </div>
 
 <div class="container">
-
     <div class="header fade-in">
         <h1>✦ CryptoSky</h1>
         <div class="status">
@@ -467,14 +421,6 @@
     </div>
 
     <div class="glass fade-in fade-in-d1">
-        <div class="api-row">
-            <input type="text" id="apiUrlInput" placeholder="https://твой-адрес.ngrok-free.dev">
-            <button class="btn-small" onclick="setApiUrl()">Обновить</button>
-        </div>
-    </div>
-
-    <!-- НАСТРОЙКИ (БЕЗ ПОЛЯ "ТЕЙК") -->
-    <div class="glass fade-in fade-in-d2">
         <span class="label">⚙️ Параметры</span>
         <div class="input-group">
             <div class="field">
@@ -489,7 +435,7 @@
         <button class="btn btn-secondary mt-1" onclick="saveSettings()">💾 Сохранить</button>
     </div>
 
-    <div class="btn-group fade-in fade-in-d3">
+    <div class="btn-group fade-in fade-in-d2">
         <button class="btn btn-primary" onclick="runScanner()">🚀 Запустить сканер</button>
         <div class="btn-group-row">
             <button class="btn btn-secondary" onclick="loadHistory()">📜 История</button>
@@ -502,36 +448,18 @@
     </div>
 
     <div class="status-text" id="statusMessage" style="font-size:13px;"></div>
-
 </div>
 
 <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    function getApiUrl() {
-        let url = localStorage.getItem('apiUrl');
-        if (!url) {
-            url = 'https://shame-edging-vagueness.ngrok-free.dev';
-            localStorage.setItem('apiUrl', url);
-        }
-        document.getElementById('apiUrlInput').value = url;
-        return url;
-    }
-
-    function setApiUrl() {
-        const url = document.getElementById('apiUrlInput').value.trim();
-        if (url) {
-            localStorage.setItem('apiUrl', url);
-            document.getElementById('statusMessage').innerText = '✅ API обновлён';
-            loadSettings();
-        }
-    }
+    // ---- API URL (скрыт от пользователя, но используется в коде) ----
+    const API_URL = localStorage.getItem('apiUrl') || 'https://shame-edging-vagueness.ngrok-free.dev';
 
     async function loadSettings() {
-        const apiUrl = getApiUrl();
         try {
-            const resp = await fetch(apiUrl + '/settings');
+            const resp = await fetch(API_URL + '/settings');
             if (!resp.ok) throw new Error('Ошибка загрузки');
             const data = await resp.json();
             if (data.volume) document.getElementById('volumeFilter').value = data.volume;
@@ -543,13 +471,12 @@
     }
 
     async function saveSettings() {
-        const apiUrl = getApiUrl();
         const settings = {
             volume: parseInt(document.getElementById('volumeFilter').value),
             atr: parseInt(document.getElementById('atrFilter').value)
         };
         try {
-            const resp = await fetch(apiUrl + '/settings', {
+            const resp = await fetch(API_URL + '/settings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(settings)
@@ -562,10 +489,9 @@
     }
 
     async function runScanner() {
-        const apiUrl = getApiUrl();
         document.getElementById('statusMessage').innerText = '⏳ Запуск сканера...';
         try {
-            const resp = await fetch(apiUrl + '/run_scanner', {
+            const resp = await fetch(API_URL + '/run_scanner', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: 1907661832 })
@@ -578,10 +504,9 @@
     }
 
     async function loadHistory() {
-        const apiUrl = getApiUrl();
         document.getElementById('statusMessage').innerText = '⏳ Загрузка истории...';
         try {
-            const resp = await fetch(apiUrl + '/history');
+            const resp = await fetch(API_URL + '/history');
             if (!resp.ok) throw new Error('Ошибка загрузки');
             const data = await resp.json();
             if (data.length === 0) {
