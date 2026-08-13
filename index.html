@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CryptoSky · Air</title>
+    <title>CryptoSky · Graphite</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -18,21 +18,94 @@
             padding: 20px 16px 40px;
             display: flex;
             flex-direction: column;
-            background: linear-gradient(145deg, #e8e0d5 0%, #d6cdc0 100%);
-            color: #2c2a28;
+            color: #1e1e1e;
             position: relative;
+            overflow-x: hidden;
+            background: #d5d5d5;
         }
 
-        .glass-layer {
+        /* --- АНИМИРОВАННЫЙ ГРАФИТОВЫЙ ФОН --- */
+        .animated-bg {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
+            width: 100%;
+            height: 100%;
             z-index: 0;
-            background: radial-gradient(circle at 20% 20%, rgba(255, 245, 235, 0.2), transparent 60%),
-                        radial-gradient(circle at 80% 80%, rgba(235, 225, 215, 0.15), transparent 50%);
+            background: linear-gradient(-45deg, #d5d5d5, #c8c8c8, #d0d0d0, #bfbfbf);
+            background-size: 400% 400%;
+            animation: gradientShift 20s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- ПУЗЫРЬКИ (мягкие) --- */
+        .bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -60px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+
+        .bubble:nth-child(1) { left: 5%; width: 80px; height: 80px; animation-duration: 22s; animation-delay: 0s; }
+        .bubble:nth-child(2) { left: 20%; width: 40px; height: 40px; animation-duration: 18s; animation-delay: 3s; }
+        .bubble:nth-child(3) { left: 35%; width: 120px; height: 120px; animation-duration: 26s; animation-delay: 1s; }
+        .bubble:nth-child(4) { left: 50%; width: 60px; height: 60px; animation-duration: 20s; animation-delay: 5s; }
+        .bubble:nth-child(5) { left: 65%; width: 90px; height: 90px; animation-duration: 24s; animation-delay: 2s; }
+        .bubble:nth-child(6) { left: 80%; width: 50px; height: 50px; animation-duration: 19s; animation-delay: 4s; }
+        .bubble:nth-child(7) { left: 92%; width: 100px; height: 100px; animation-duration: 28s; animation-delay: 6s; }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 0.5; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- МЕРЦАНИЕ --- */
+        .glow {
+            position: fixed;
+            top: -30%;
+            left: -20%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(180, 180, 180, 0.08), transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: glowPulse 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .glow2 {
+            position: fixed;
+            bottom: -20%;
+            right: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(160, 160, 160, 0.06), transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            animation: glowPulse 10s ease-in-out infinite reverse;
+            pointer-events: none;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.3); opacity: 1; }
         }
 
         .container {
@@ -43,16 +116,17 @@
             width: 100%;
         }
 
+        /* --- СТЕКЛО (графит) --- */
         .glass {
-            background: rgba(255, 248, 242, 0.45);
+            background: rgba(235, 235, 235, 0.5);
             backdrop-filter: blur(40px) saturate(1.2);
             -webkit-backdrop-filter: blur(40px) saturate(1.2);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             border-radius: 32px;
             padding: 20px 18px;
             margin-bottom: 16px;
-            box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.08),
-                        0 1px 0 0 rgba(255, 255, 255, 0.6) inset;
+            box-shadow: 0 12px 40px -8px rgba(0, 0, 0, 0.06),
+                        0 1px 0 0 rgba(255, 255, 255, 0.5) inset;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
@@ -71,14 +145,14 @@
         .header h1 {
             font-size: 26px;
             font-weight: 700;
-            color: #2c2a28;
+            color: #1e1e1e;
             letter-spacing: -0.5px;
         }
 
         .header .status {
             font-size: 13px;
             font-weight: 500;
-            color: rgba(44, 42, 40, 0.5);
+            color: rgba(30, 30, 30, 0.5);
             display: flex;
             align-items: center;
             gap: 8px;
@@ -87,7 +161,7 @@
         .header .status .dot {
             width: 8px;
             height: 8px;
-            background: #7d9b7a;
+            background: #6a8a6a;
             border-radius: 50%;
             display: inline-block;
             animation: pulseDot 2s infinite;
@@ -101,7 +175,7 @@
         .label {
             font-size: 12px;
             font-weight: 600;
-            color: rgba(44, 42, 40, 0.35);
+            color: rgba(30, 30, 30, 0.35);
             text-transform: uppercase;
             letter-spacing: 0.6px;
             display: block;
@@ -122,7 +196,7 @@
 
         .input-group .field label {
             font-size: 11px;
-            color: rgba(44, 42, 40, 0.3);
+            color: rgba(30, 30, 30, 0.3);
             display: block;
             margin-bottom: 4px;
             text-transform: uppercase;
@@ -132,21 +206,21 @@
         .input-group .field input {
             width: 100%;
             background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(200, 200, 200, 0.6);
             border-radius: 18px;
             padding: 14px 16px;
             font-size: 16px;
             font-weight: 500;
-            color: #2c2a28;
+            color: #1e1e1e;
             outline: none;
             transition: 0.25s ease;
             backdrop-filter: blur(10px);
         }
 
         .input-group .field input:focus {
-            border-color: #b8a99a;
+            border-color: #b0b0b0;
             background: rgba(255, 255, 255, 0.7);
-            box-shadow: 0 0 0 4px rgba(184, 169, 154, 0.15);
+            box-shadow: 0 0 0 4px rgba(176, 176, 176, 0.15);
         }
 
         .btn {
@@ -165,21 +239,21 @@
         }
 
         .btn-primary {
-            background: rgba(44, 42, 40, 0.85);
-            color: #f5f0ea;
-            box-shadow: 0 4px 16px rgba(44, 42, 40, 0.08);
+            background: rgba(30, 30, 30, 0.85);
+            color: #f0f0f0;
+            box-shadow: 0 4px 16px rgba(30, 30, 30, 0.08);
             backdrop-filter: blur(10px);
         }
 
         .btn-primary:active {
             transform: scale(0.96);
-            background: rgba(44, 42, 40, 0.95);
+            background: rgba(30, 30, 30, 0.95);
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            color: #2c2a28;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: #1e1e1e;
             backdrop-filter: blur(10px);
         }
 
@@ -212,17 +286,17 @@
         .api-row input {
             flex: 1;
             background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(200, 200, 200, 0.5);
             border-radius: 18px;
             padding: 12px 16px;
             font-size: 14px;
-            color: #2c2a28;
+            color: #1e1e1e;
             outline: none;
             backdrop-filter: blur(10px);
         }
 
         .api-row input:focus {
-            border-color: #b8a99a;
+            border-color: #b0b0b0;
             background: rgba(255, 255, 255, 0.6);
         }
 
@@ -232,8 +306,8 @@
             border: none;
             background: rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: #2c2a28;
+            border: 1px solid rgba(200, 200, 200, 0.4);
+            color: #1e1e1e;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
@@ -245,7 +319,7 @@
         }
 
         .signal-card {
-            border-left: 3px solid #b8a99a;
+            border-left: 3px solid #b0b0b0;
             padding-left: 14px;
             margin-bottom: 14px;
         }
@@ -267,7 +341,7 @@
         .signal-card .row .symbol {
             font-weight: 700;
             font-size: 18px;
-            color: #2c2a28;
+            color: #1e1e1e;
         }
 
         .signal-card .row .side {
@@ -277,8 +351,8 @@
             border-radius: 40px;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            background: rgba(44, 42, 40, 0.06);
-            color: rgba(44, 42, 40, 0.6);
+            background: rgba(30, 30, 30, 0.06);
+            color: rgba(30, 30, 30, 0.6);
         }
 
         .signal-card .row .side.shot {
@@ -296,12 +370,12 @@
             flex-wrap: wrap;
             gap: 4px 14px;
             font-size: 13px;
-            color: rgba(44, 42, 40, 0.4);
+            color: rgba(30, 30, 30, 0.4);
             margin-top: 8px;
         }
 
         .signal-card .meta .highlight {
-            color: #2c2a28;
+            color: #1e1e1e;
             font-weight: 500;
         }
 
@@ -311,8 +385,8 @@
             font-weight: 600;
             padding: 2px 10px;
             border-radius: 20px;
-            background: rgba(44, 42, 40, 0.06);
-            color: rgba(44, 42, 40, 0.5);
+            background: rgba(30, 30, 30, 0.06);
+            color: rgba(30, 30, 30, 0.5);
         }
 
         .signal-card .badge.green {
@@ -333,7 +407,7 @@
         .status-text {
             text-align: center;
             font-size: 14px;
-            color: rgba(44, 42, 40, 0.25);
+            color: rgba(30, 30, 30, 0.25);
             padding: 20px 0;
             letter-spacing: 0.3px;
         }
@@ -365,7 +439,23 @@
 </head>
 <body>
 
-<div class="glass-layer"></div>
+<!-- АНИМИРОВАННЫЙ ГРАФИТОВЫЙ ФОН -->
+<div class="animated-bg"></div>
+
+<!-- МЕРЦАНИЕ -->
+<div class="glow"></div>
+<div class="glow2"></div>
+
+<!-- ПУЗЫРЬКИ -->
+<div class="bubbles">
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+    <div class="bubble"></div>
+</div>
 
 <div class="container">
 
@@ -383,6 +473,7 @@
         </div>
     </div>
 
+    <!-- НАСТРОЙКИ (БЕЗ ПОЛЯ "ТЕЙК") -->
     <div class="glass fade-in fade-in-d2">
         <span class="label">⚙️ Параметры</span>
         <div class="input-group">
@@ -393,10 +484,6 @@
             <div class="field">
                 <label>ATR %</label>
                 <input type="number" id="atrFilter" value="50" step="5">
-            </div>
-            <div class="field">
-                <label>Тейк x</label>
-                <input type="number" id="riskReward" value="3.0" step="0.5">
             </div>
         </div>
         <button class="btn btn-secondary mt-1" onclick="saveSettings()">💾 Сохранить</button>
@@ -449,7 +536,6 @@
             const data = await resp.json();
             if (data.volume) document.getElementById('volumeFilter').value = data.volume;
             if (data.atr) document.getElementById('atrFilter').value = data.atr;
-            if (data.risk_reward) document.getElementById('riskReward').value = data.risk_reward;
             document.getElementById('statusMessage').innerText = '✅ Настройки загружены';
         } catch (e) {
             document.getElementById('statusMessage').innerText = '❌ Ошибка загрузки: ' + e.message;
@@ -460,8 +546,7 @@
         const apiUrl = getApiUrl();
         const settings = {
             volume: parseInt(document.getElementById('volumeFilter').value),
-            atr: parseInt(document.getElementById('atrFilter').value),
-            risk_reward: parseFloat(document.getElementById('riskReward').value)
+            atr: parseInt(document.getElementById('atrFilter').value)
         };
         try {
             const resp = await fetch(apiUrl + '/settings', {
@@ -586,8 +671,8 @@
 
     setTimeout(() => {
         const demo = [
-            { symbol: 'BTCUSDT', side: 'SHORT (ОТБОЙ R1)', current_price: '61234.56', entry: '61200.00', stop: '61300.00', tp: '61100.00', daily_volume_usd: '450.2', signal_type: 'BOUNCE', level: '61250.00', risk_reward: '1:3.0', touches: 3, atr_used: '850.5', atr_consumed: '45.2', atr_status: '🟢', time: '2026-08-06 14:30' },
-            { symbol: 'ETHUSDT', side: 'LONG (ПРОБОЙ S1)', current_price: '3456.78', entry: '3450.00', stop: '3440.00', tp: '3460.00', daily_volume_usd: '320.1', signal_type: 'BREAKOUT', level: '3448.00', risk_reward: '1:3.0', touches: 2, atr_used: '120.3', atr_consumed: '62.8', atr_status: '🟠', time: '2026-08-06 14:25' }
+            { symbol: 'BTCUSDT', side: 'LONG (ОТБОЙ S1)', current_price: '61234.56', entry: '61200.00', stop: '61100.00', tp: '61500.00', daily_volume_usd: '450.2', signal_type: 'ОТБОЙ', level: '61150.00', risk_reward: '1:3.0', touches: 3, atr_used: '850.5', atr_consumed: '45.2', atr_status: '🟢', time: '2026-08-13 14:30' },
+            { symbol: 'SOLUSDT', side: 'SHORT (ПРОБОЙ R1)', current_price: '75.28', entry: '75.13', stop: '73.40', tp: '80.32', daily_volume_usd: '1044.95', signal_type: 'ПРОБОЙ', level: '75.28', risk_reward: '1:4.6', touches: 9, atr_used: '2.16', atr_consumed: '26.9', atr_status: '🟢', time: '2026-08-13 14:25' }
         ];
         displaySignals(demo);
     }, 700);
