@@ -219,7 +219,6 @@
             box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
         }
 
-        /* --- КНОПКИ (отступ 3 мм) --- */
         .btn {
             width: 100%;
             padding: 16px 20px;
@@ -265,7 +264,6 @@
             transform: scale(0.97);
         }
 
-        /* --- РЯД КНОПОК (ИСТОРИЯ + ОЧИСТИТЬ) --- */
         .btn-group-row {
             display: flex;
             gap: 11px;
@@ -276,7 +274,11 @@
             margin-bottom: 0;
         }
 
-        /* --- КАРТОЧКИ СИГНАЛОВ --- */
+        /* --- ОТСТУП МЕЖДУ КНОПКАМИ И СИГНАЛАМИ: 5 ММ (18px) --- */
+        .signals-wrapper {
+            margin-top: 18px;
+        }
+
         .signal-card {
             border-left: 3px solid rgba(30, 30, 30, 0.2);
             padding-left: 14px;
@@ -446,11 +448,14 @@
         </div>
     </div>
 
-    <div id="signalsContainer">
-        <div class="status-text">📭 Нет сигналов</div>
+    <!-- ОБЁРТКА СИГНАЛОВ С ОТСТУПОМ 5 ММ -->
+    <div class="signals-wrapper">
+        <div id="signalsContainer">
+            <div class="status-text">📭 Нет сигналов</div>
+        </div>
     </div>
 
-    <div class="status-text" id="statusMessage" style="font-size:13px;"></div>
+    <div class="status-text" id="statusMessage" style="font-size:13px; margin-top: 8px;"></div>
 </div>
 
 <script>
