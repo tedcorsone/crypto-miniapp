@@ -113,7 +113,6 @@
             width: 100%;
         }
 
-        /* --- СТЕКЛО (iOS 27) --- */
         .glass {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(60px) saturate(1.4);
@@ -124,7 +123,6 @@
             box-shadow: 0 12px 50px -8px rgba(0, 0, 0, 0.05),
                         0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            /* ОТСТУП 3 ММ (~11px) */
             margin-bottom: 11px;
         }
 
@@ -221,7 +219,7 @@
             box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
         }
 
-        /* --- СТЕКЛЯННЫЕ КНОПКИ --- */
+        /* --- КНОПКИ С ОТСТУПОМ 3 ММ (11px) --- */
         .btn {
             width: 100%;
             padding: 16px 20px;
@@ -238,7 +236,6 @@
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            /* ОТСТУП 3 ММ (~11px) */
             margin-bottom: 11px;
         }
 
@@ -282,11 +279,10 @@
             flex: 1;
         }
 
-        /* --- СИГНАЛЫ --- */
         .signal-card {
             border-left: 3px solid rgba(30, 30, 30, 0.2);
             padding-left: 14px;
-            margin-bottom: 14px;
+            margin-bottom: 11px;
         }
 
         .signal-card:last-child {
@@ -554,7 +550,7 @@
             else if (s.atr_status === '🔴') statusBadge = '<span class="badge red">🪫 Мало энергии</span>';
 
             html += `
-                <div class="glass signal-card ${sideClass} fade-in" style="animation-delay: ${delay}s; margin-bottom: 11px;">
+                <div class="glass signal-card ${sideClass} fade-in" style="animation-delay: ${delay}s;">
                     <div class="row">
                         <span class="symbol">${s.symbol || '—'}</span>
                         <span class="side ${sideClass}">${sideLabel}</span>
