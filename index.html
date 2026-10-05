@@ -3,14 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CryptoSky · iOS Glass</title>
+    <title>CryptoSky · SkyLoker</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -25,11 +21,7 @@
         }
 
         .animated-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 0;
             background: linear-gradient(-45deg, #b8b8b8, #a8a8a8, #b0b0b0, #9a9a9a);
             background-size: 400% 400%;
@@ -43,19 +35,12 @@
         }
 
         .bubbles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-            overflow: hidden;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none; overflow: hidden;
         }
 
         .bubble {
-            position: absolute;
-            bottom: -60px;
+            position: absolute; bottom: -60px;
             background: rgba(50, 50, 50, 0.12);
             border-radius: 50%;
             animation: floatUp linear infinite;
@@ -75,27 +60,17 @@
         }
 
         .glow {
-            position: fixed;
-            top: -30%;
-            left: -20%;
-            width: 70%;
-            height: 70%;
+            position: fixed; top: -30%; left: -20%; width: 70%; height: 70%;
             background: radial-gradient(circle, rgba(120, 120, 120, 0.10), transparent 70%);
-            border-radius: 50%;
-            z-index: 0;
+            border-radius: 50%; z-index: 0;
             animation: glowPulse 8s ease-in-out infinite;
             pointer-events: none;
         }
 
         .glow2 {
-            position: fixed;
-            bottom: -20%;
-            right: -10%;
-            width: 60%;
-            height: 60%;
+            position: fixed; bottom: -20%; right: -10%; width: 60%; height: 60%;
             background: radial-gradient(circle, rgba(100, 100, 100, 0.08), transparent 70%);
-            border-radius: 50%;
-            z-index: 0;
+            border-radius: 50%; z-index: 0;
             animation: glowPulse 10s ease-in-out infinite reverse;
             pointer-events: none;
         }
@@ -106,11 +81,8 @@
         }
 
         .container {
-            position: relative;
-            z-index: 1;
-            max-width: 440px;
-            margin: 0 auto;
-            width: 100%;
+            position: relative; z-index: 1;
+            max-width: 440px; margin: 0 auto; width: 100%;
         }
 
         .glass {
@@ -126,40 +98,26 @@
             margin-bottom: 11px;
         }
 
-        .glass:active {
-            transform: scale(0.97);
-        }
+        .glass:active { transform: scale(0.97); }
 
         .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            padding: 0 2px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 16px; padding: 0 2px;
         }
 
         .header h1 {
-            font-size: 26px;
-            font-weight: 700;
-            color: #1e1e1e;
+            font-size: 26px; font-weight: 700; color: #1e1e1e;
             letter-spacing: -0.5px;
         }
 
         .header .status {
-            font-size: 13px;
-            font-weight: 500;
-            color: rgba(30, 30, 30, 0.5);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 13px; font-weight: 500; color: rgba(30, 30, 30, 0.5);
+            display: flex; align-items: center; gap: 8px;
         }
 
         .header .status .dot {
-            width: 8px;
-            height: 8px;
-            background: #6a8a6a;
-            border-radius: 50%;
-            display: inline-block;
+            width: 8px; height: 8px; background: #6a8a6a;
+            border-radius: 50%; display: inline-block;
             animation: pulseDot 2s infinite;
         }
 
@@ -169,34 +127,19 @@
         }
 
         .label {
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(30, 30, 30, 0.35);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            display: block;
-            margin-bottom: 6px;
+            font-size: 12px; font-weight: 600; color: rgba(30, 30, 30, 0.35);
+            text-transform: uppercase; letter-spacing: 0.6px;
+            display: block; margin-bottom: 6px;
         }
 
-        .input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 4px;
-        }
+        .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
 
-        .input-group .field {
-            flex: 1;
-            min-width: 70px;
-        }
+        .input-group .field { flex: 1; min-width: 70px; }
 
         .input-group .field label {
-            font-size: 11px;
-            color: rgba(30, 30, 30, 0.35);
-            display: block;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
+            font-size: 11px; color: rgba(30, 30, 30, 0.35);
+            display: block; margin-bottom: 4px;
+            text-transform: uppercase; letter-spacing: 0.4px;
         }
 
         .input-group .field input {
@@ -205,11 +148,8 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 18px;
             padding: 14px 16px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #1e1e1e;
-            outline: none;
-            transition: 0.25s ease;
+            font-size: 16px; font-weight: 500; color: #1e1e1e;
+            outline: none; transition: 0.25s ease;
             backdrop-filter: blur(20px);
         }
 
@@ -220,17 +160,11 @@
         }
 
         .btn {
-            width: 100%;
-            padding: 16px 20px;
-            border: none;
-            border-radius: 22px;
-            font-size: 17px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100%; padding: 16px 20px;
+            border: none; border-radius: 22px;
+            font-size: 17px; font-weight: 600;
+            cursor: pointer; transition: all 0.25s ease;
+            display: flex; align-items: center; justify-content: center;
             gap: 10px;
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
@@ -238,9 +172,7 @@
             margin-bottom: 11px;
         }
 
-        .btn:last-child {
-            margin-bottom: 0;
-        }
+        .btn:last-child { margin-bottom: 0; }
 
         .btn-primary {
             background: rgba(30, 30, 30, 0.15);
@@ -264,141 +196,89 @@
             transform: scale(0.97);
         }
 
-        .btn-group-row {
-            display: flex;
-            gap: 11px;
-        }
+        .btn-group { display: flex; flex-direction: column; }
 
-        .btn-group-row .btn {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        /* --- ОТСТУП МЕЖДУ КНОПКАМИ И СИГНАЛАМИ: 5 ММ (18px) --- */
-        .signals-wrapper {
-            margin-top: 18px;
-        }
+        .btn-group-row { display: flex; gap: 11px; }
+        .btn-group-row .btn { flex: 1; }
 
         .signal-card {
             border-left: 3px solid rgba(30, 30, 30, 0.2);
-            padding-left: 14px;
-            margin-bottom: 11px;
+            padding-left: 14px; margin-bottom: 14px;
         }
 
-        .signal-card:last-child {
-            margin-bottom: 0;
-        }
+        .signal-card:last-child { margin-bottom: 0; }
 
-        .signal-card.shot {
-            border-left-color: rgba(180, 100, 100, 0.4);
-        }
-
-        .signal-card.long {
-            border-left-color: rgba(100, 180, 120, 0.4);
-        }
+        .signal-card.shot { border-left-color: rgba(180, 100, 100, 0.4); }
+        .signal-card.long { border-left-color: rgba(100, 180, 120, 0.4); }
 
         .signal-card .row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .signal-card .row .symbol {
-            font-weight: 700;
-            font-size: 18px;
-            color: #1e1e1e;
+            font-weight: 700; font-size: 18px; color: #1e1e1e;
         }
 
         .signal-card .row .side {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 14px;
-            border-radius: 40px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
+            font-size: 11px; font-weight: 600;
+            padding: 3px 14px; border-radius: 40px;
+            text-transform: uppercase; letter-spacing: 0.4px;
             background: rgba(30, 30, 30, 0.05);
             color: rgba(30, 30, 30, 0.6);
         }
 
         .signal-card .row .side.shot {
-            background: rgba(180, 100, 100, 0.10);
-            color: #8a5a5a;
+            background: rgba(180, 100, 100, 0.10); color: #8a5a5a;
         }
 
         .signal-card .row .side.long {
-            background: rgba(100, 180, 120, 0.10);
-            color: #4a7a5a;
+            background: rgba(100, 180, 120, 0.10); color: #4a7a5a;
         }
 
         .signal-card .meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px 14px;
-            font-size: 13px;
-            color: rgba(30, 30, 30, 0.4);
+            display: flex; flex-wrap: wrap; gap: 4px 14px;
+            font-size: 13px; color: rgba(30, 30, 30, 0.4);
             margin-top: 8px;
         }
 
-        .signal-card .meta .highlight {
-            color: #1e1e1e;
-            font-weight: 500;
-        }
+        .signal-card .meta .highlight { color: #1e1e1e; font-weight: 500; }
 
         .signal-card .badge {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 10px;
-            border-radius: 20px;
+            display: inline-block; font-size: 11px; font-weight: 600;
+            padding: 2px 10px; border-radius: 20px;
             background: rgba(30, 30, 30, 0.04);
             color: rgba(30, 30, 30, 0.5);
         }
 
         .signal-card .badge.green {
-            background: rgba(100, 180, 120, 0.10);
-            color: #4a7a5a;
+            background: rgba(100, 180, 120, 0.10); color: #4a7a5a;
         }
 
         .signal-card .badge.orange {
-            background: rgba(200, 160, 100, 0.10);
-            color: #8a7a4a;
+            background: rgba(200, 160, 100, 0.10); color: #8a7a4a;
         }
 
         .signal-card .badge.red {
-            background: rgba(180, 100, 100, 0.10);
-            color: #8a5a5a;
+            background: rgba(180, 100, 100, 0.10); color: #8a5a5a;
         }
 
         .status-text {
-            text-align: center;
-            font-size: 14px;
-            color: rgba(30, 30, 30, 0.2);
-            padding: 20px 0;
+            text-align: center; font-size: 14px;
+            color: rgba(30, 30, 30, 0.2); padding: 20px 0;
             letter-spacing: 0.3px;
         }
 
-        .fade-in {
-            animation: fadeUp 0.6s ease both;
-        }
+        .fade-in { animation: fadeUp 0.6s ease both; }
         .fade-in-d1 { animation-delay: 0.05s; }
         .fade-in-d2 { animation-delay: 0.1s; }
         .fade-in-d3 { animation-delay: 0.15s; }
 
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px) scale(0.97);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            from { opacity: 0; transform: translateY(16px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .mt-1 { margin-top: 8px; }
-        .flex { display: flex; align-items: center; gap: 8px; }
-        .flex-between { display: flex; justify-content: space-between; align-items: center; }
-        .gap-1 { gap: 6px; }
         ::-webkit-scrollbar { width: 0; }
     </style>
 </head>
@@ -448,8 +328,7 @@
         </div>
     </div>
 
-    <!-- ОБЁРТКА СИГНАЛОВ С ОТСТУПОМ 5 ММ -->
-    <div class="signals-wrapper">
+    <div class="signals-wrapper" style="margin-top: 18px;">
         <div id="signalsContainer">
             <div class="status-text">📭 Нет сигналов</div>
         </div>
@@ -462,7 +341,7 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    const API_URL = localStorage.getItem('apiUrl') || 'https://skyloker-yuridollar.amvera.io';
+    const API_URL = 'https://skyloker-yuridollar.amvera.io';
 
     async function loadSettings() {
         try {
@@ -587,27 +466,7 @@
         container.innerHTML = html;
     }
 
-    window.Telegram.WebApp.onEvent('data', (data) => {
-        try {
-            const parsed = JSON.parse(data);
-            if (parsed.type === 'signals') {
-                displaySignals(parsed.data);
-                document.getElementById('statusMessage').innerText = `✅ Получено ${parsed.data.length} сигналов`;
-            }
-        } catch (e) {
-            console.error('Ошибка данных от бота:', e);
-        }
-    });
-
     loadSettings();
-
-    setTimeout(() => {
-        const demo = [
-            { symbol: 'BTCUSDT', side: 'LONG (ОТБОЙ S1)', current_price: '61234.56', entry: '61200.00', stop: '61100.00', tp: '61500.00', daily_volume_usd: '450.2', signal_type: 'ОТБОЙ', level: '61150.00', risk_reward: '1:3.0', touches: 3, atr_used: '850.5', atr_consumed: '45.2', atr_status: '🟢', time: '2026-08-13 14:30' },
-            { symbol: 'SOLUSDT', side: 'SHORT (ПРОБОЙ R1)', current_price: '75.28', entry: '75.13', stop: '73.40', tp: '80.32', daily_volume_usd: '1044.95', signal_type: 'ПРОБОЙ', level: '75.28', risk_reward: '1:4.6', touches: 9, atr_used: '2.16', atr_consumed: '26.9', atr_status: '🟢', time: '2026-08-13 14:25' }
-        ];
-        displaySignals(demo);
-    }, 700);
 </script>
 
 </body>
